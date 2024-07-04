@@ -1,4 +1,3 @@
-
 import attr
 import libcst as cst
 from attr.validators import instance_of, optional
