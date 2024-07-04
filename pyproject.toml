@@ -1,0 +1,36 @@
+[project]
+name = "headline"
+authors = [
+    {name="ed cuss"},
+]
+description = ""
+readme = "README.md"
+requires-python = ">=3.8"
+version = "0.0.1"
+dependencies = [
+    "attrs",
+    "libcst",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-cov",
+    "hypothesis",    
+]
+lint = [
+    "pre-commit",
+    "black>=24",
+    "ruff>=0.4.2",
+]
+dev = [
+    "headline[test,lint]",
+]
+
+[tool.black]
+line-length = 79
+
+[tool.ruff]
+lint.extend-select = ["I", "W"]
+lint.ignore = ["E741"]
+line-length = 79
