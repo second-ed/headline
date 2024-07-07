@@ -51,3 +51,8 @@ class FuncCallCollector(cst.CSTVisitor):
             func_name = node.func.value
             if func_name in self.func_names:
                 self.calls.append(func_name)
+
+
+@attr.define
+class FuncVisitor(cst.CSTVisitor):
+    pass
