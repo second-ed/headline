@@ -1,10 +1,13 @@
+import libcst as cst
+
+
 def remove_duplicate_calls(calls: list) -> list:
     return list(dict.fromkeys(calls))
 
 
 def sort_func_names(funcs):
     return sorted(
-        funcs, key=lambda x: (-len(x.calls), -len(x.called), x.name.strip("_"))
+        funcs, key=lambda x: (len(x.called), -len(x.calls), x.name.strip("_"))
     )
 
 
@@ -26,3 +29,9 @@ def is_private_and_has_no_leading_underscore(
         and func_name in all_funcs
         and func_name in private_funcs
     )
+
+
+def get_leading_lines(idx: int) -> list:
+    if idx == 0:
+        return [cst.EmptyLine()]
+    return []
