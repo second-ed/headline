@@ -7,7 +7,7 @@ from headline.utils import is_not_private_and_has_leading_underscore
 
 @attr.define
 class DefTransformer(cst.CSTTransformer):
-    sorted_func_defs: list = attr.ib(validator=[instance_of(list)])
+    func_defs: list = attr.ib(validator=[instance_of(list)])
     funcs: list = attr.ib(validator=[instance_of(list)])
     all_funcs: list = attr.ib(validator=[instance_of(list)], init=False)
     private_funcs: list = attr.ib(validator=[instance_of(list)], init=False)
@@ -39,7 +39,7 @@ class DefTransformer(cst.CSTTransformer):
             if isinstance(element, cst.FunctionDef):
                 # get the sorted function by index and remove leading_lines to avoid
                 # functions having more than 2 lines between them
-                new_func = self.sorted_func_defs[self.def_index].with_changes(
+                new_func = self.func_defs[self.def_index].with_changes(
                     leading_lines=[]
                 )
                 new_body.append(new_func)
