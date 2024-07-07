@@ -84,3 +84,25 @@ class FuncTransformer(cst.CSTTransformer):
                     func=cst.Name(value=f"_{original_node.func.value}")
                 )
         return updated_node
+
+    def leave_Arg(
+        self, original_node: cst.Arg, updated_node: cst.Arg
+    ) -> cst.Arg:
+        if isinstance(updated_node.value, cst.Name):
+
+            func_name = updated_node.value.value
+
+            if is_not_private_and_has_leading_underscore(
+                func_name, self.all_funcs, self.private_funcs
+            ):
+                updated_node = updated_node.with_changes(
+                    value=cst.Name(value=func_name.lstrip("_"))
+                )
+            if is_private_and_has_no_leading_underscore(
+                func_name, self.all_funcs, self.private_funcs
+            ):
+                updated_node = updated_node.with_changes(
+                    value=cst.Name(value="_" + func_name)
+                )
+            self.func_defs[func_name] = updated_node
+        return updated_node
