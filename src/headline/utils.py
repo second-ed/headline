@@ -31,6 +31,20 @@ def is_private_and_has_no_leading_underscore(
     )
 
 
+def get_func_name_edit(
+    func_name: str, all_funcs: list, private_funcs: list
+) -> str:
+    if is_not_private_and_has_leading_underscore(
+        func_name, all_funcs, private_funcs
+    ):
+        return func_name.lstrip("_")
+    if is_private_and_has_no_leading_underscore(
+        func_name, all_funcs, private_funcs
+    ):
+        return f"_{func_name}"
+    return ""
+
+
 def get_leading_lines(idx: int) -> list:
     if idx == 0:
         return [cst.EmptyLine()]

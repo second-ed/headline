@@ -3,9 +3,8 @@ import libcst as cst
 from attr.validators import instance_of
 
 from headline.utils import (
+    get_func_name_edit,
     get_leading_lines,
-    is_not_private_and_has_leading_underscore,
-    is_private_and_has_no_leading_underscore,
 )
 
 
@@ -52,17 +51,12 @@ class FuncTransformer(cst.CSTTransformer):
         self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef
     ) -> cst.FunctionDef:
         func_name = updated_node.name.value
-        if is_not_private_and_has_leading_underscore(
+        name_edit = get_func_name_edit(
             func_name, self.all_funcs, self.private_funcs
-        ):
+        )
+        if name_edit:
             updated_node = updated_node.with_changes(
-                name=cst.Name(value=func_name.lstrip("_"))
-            )
-        if is_private_and_has_no_leading_underscore(
-            func_name, self.all_funcs, self.private_funcs
-        ):
-            updated_node = updated_node.with_changes(
-                name=cst.Name(value="_" + func_name)
+                name=cst.Name(value=name_edit)
             )
         self.func_defs[func_name] = updated_node
         return updated_node
@@ -70,18 +64,13 @@ class FuncTransformer(cst.CSTTransformer):
     def leave_Call(
         self, original_node: cst.Call, updated_node: cst.Call
     ) -> cst.CSTNode:
-        if isinstance(original_node.func, cst.Name):
-            if is_not_private_and_has_leading_underscore(
-                original_node.func.value, self.all_funcs, self.private_funcs
-            ):
+        if isinstance(updated_node.func, cst.Name):
+            name_edit = get_func_name_edit(
+                updated_node.func.value, self.all_funcs, self.private_funcs
+            )
+            if name_edit:
                 updated_node = updated_node.with_changes(
-                    func=cst.Name(value=original_node.func.value.lstrip("_"))
-                )
-            if is_private_and_has_no_leading_underscore(
-                original_node.func.value, self.all_funcs, self.private_funcs
-            ):
-                updated_node = updated_node.with_changes(
-                    func=cst.Name(value=f"_{original_node.func.value}")
+                    func=cst.Name(value=name_edit)
                 )
         return updated_node
 
@@ -89,20 +78,13 @@ class FuncTransformer(cst.CSTTransformer):
         self, original_node: cst.Arg, updated_node: cst.Arg
     ) -> cst.Arg:
         if isinstance(updated_node.value, cst.Name):
-
             func_name = updated_node.value.value
-
-            if is_not_private_and_has_leading_underscore(
+            name_edit = get_func_name_edit(
                 func_name, self.all_funcs, self.private_funcs
-            ):
+            )
+            if name_edit:
                 updated_node = updated_node.with_changes(
-                    value=cst.Name(value=func_name.lstrip("_"))
-                )
-            if is_private_and_has_no_leading_underscore(
-                func_name, self.all_funcs, self.private_funcs
-            ):
-                updated_node = updated_node.with_changes(
-                    value=cst.Name(value="_" + func_name)
+                    value=cst.Name(value=name_edit)
                 )
             self.func_defs[func_name] = updated_node
         return updated_node
