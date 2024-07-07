@@ -14,7 +14,7 @@ class FuncTransformer(cst.CSTTransformer):
     sorted_func_names: list = attr.ib(validator=[instance_of(list)])
     all_funcs: list = attr.ib(validator=[instance_of(list)])
     private_funcs: list = attr.ib(validator=[instance_of(list)])
-    def_index: int = attr.ib(default=0, validator=[instance_of(int)])
+    def_index: int = attr.ib(default=0, validator=[instance_of(int)])  # type: ignore
 
     def leave_Module(
         self, original_node: cst.Module, updated_node: cst.Module

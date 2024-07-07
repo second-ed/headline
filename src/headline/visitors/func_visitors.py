@@ -20,7 +20,7 @@ class FuncVisitor(cst.CSTVisitor):
     calls: dict = attr.ib(default=None)
     called_by: dict = attr.ib(default=None)
     is_called: list = attr.ib(default=None)
-    depth: int = attr.ib(default=0, validator=[instance_of(int)])
+    depth: int = attr.ib(default=0, validator=[instance_of(int)])  # type: ignore
     curr_func: str = attr.ib(default="")
 
     def __attrs_post_init__(self):
