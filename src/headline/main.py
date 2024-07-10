@@ -10,61 +10,58 @@
 # setup_logger(__file__, 2)
 # logger = logging.getLogger()
 
-import inspect
-from collections import defaultdict
 
 import libcst as cst
-from class_inspector import _utils
 
-from headline.transformers.func_transformers import (
-    DefSorter,
-    PrivateDefStripper,
-)
-from headline.utils import remove_duplicate_calls, sort_func_names
+from headline.transformers.func_transformers import FuncTransformer
+from headline.utils import sort_func_names
 from headline.visitors.func_visitors import (
-    DefCollector,
     FuncCall,
-    FuncCallCollector,
+    FuncVisitor,
 )
 
-source_code = inspect.getsource(_utils)
-module = cst.parse_module(source_code)
-def_collector = DefCollector()
-module.visit(def_collector)
 
-func_calls = defaultdict(list)
-called_by = defaultdict(list)
+def sort_src_functions(src_code: str) -> str:
+    module = cst.parse_module(src_code)
+    visitor = FuncVisitor()
 
-for func_name, func_node in def_collector.func_defs.items():
-    call_collector = FuncCallCollector(def_collector.def_names)
-    func_node.body.visit(call_collector)
-    func_calls[func_name] = call_collector.calls
+    module.visit(visitor)
 
-    for called_func in call_collector.calls:
-        called_by[called_func].append(func_name)
+    all_local_funcs = [*visitor.top_level_funcs, *visitor.internal_funcs]
+    local_calls = [c for c in visitor.is_called if c in all_local_funcs]
 
+    # these need underscores added if they don't have them
+    top_level_calls = {
+        f: [c for c in visitor.calls[f] if c in visitor.top_level_funcs]
+        for f in all_local_funcs
+    }
 
-funcs = []
+    # these need underscores removed if they have them
+    top_level_called = {
+        f: [c for c in visitor.called_by[f] if c in visitor.top_level_funcs]
+        for f in all_local_funcs
+    }
 
-for func_name, calls in func_calls.items():
-    funcs.append(
-        FuncCall(
-            func_name,
-            remove_duplicate_calls(calls),
-            remove_duplicate_calls(called_by[func_name]),
-        )
+    func_objs = []
+
+    for f in all_local_funcs:
+        if f in visitor.top_level_funcs:
+            func_objs.append(
+                FuncCall(
+                    f,
+                    top_level_calls[f],
+                    top_level_called[f],
+                )
+            )
+
+    sorted_funcs = sort_func_names(func_objs)
+
+    transformer = FuncTransformer(
+        {f.name: visitor.func_defs[f.name] for f in sorted_funcs},
+        [f.name for f in sorted_funcs],
+        all_local_funcs,
+        [*local_calls, *visitor.internal_funcs],
     )
 
-sorted_funcs = sort_func_names(funcs)
-
-transformer = DefSorter(
-    [def_collector.func_defs[f.name] for f in sorted_funcs]
-)
-modified_tree = module.visit(transformer)
-
-transformer2 = PrivateDefStripper(
-    [f.name for f in funcs if f.name.startswith("_") and len(f.called) != 0]
-)
-modified_tree = modified_tree.visit(transformer2)
-
-print(modified_tree.code)
+    modified_tree = module.visit(transformer)
+    return modified_tree.code
