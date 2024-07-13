@@ -15,8 +15,15 @@ from headline.io import get_matching_files
 from headline.transform import sort_src_funcs_and_tests
 
 
-def main(current_dir, inp_sort_type: str, inp_tests_only: bool) -> None:
+def main(
+    current_dir: str,
+    inp_sort_type: str,
+    inp_tests_only: bool,
+    inp_rename: bool,
+) -> None:
     matching_files = get_matching_files(current_dir)
 
     for src, tests in matching_files:
-        sort_src_funcs_and_tests(src, tests, inp_sort_type, inp_tests_only)
+        sort_src_funcs_and_tests(
+            src, tests, inp_sort_type, inp_tests_only, inp_rename
+        )

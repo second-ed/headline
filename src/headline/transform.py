@@ -75,7 +75,11 @@ def sort_test_funcs(
 
 
 def sort_src_funcs_and_tests(
-    src_path: str, test_path: str, inp_sort_type: str, inp_tests_only: bool
+    src_path: str,
+    test_path: str,
+    inp_sort_type: str,
+    inp_tests_only: bool,
+    inp_rename: bool,
 ):
     sort_types = {
         "newspaper": srt.sort_funcs_newspaper,
@@ -88,11 +92,17 @@ def sort_src_funcs_and_tests(
     if inp_tests_only:
         src_code = io.get_src_code(src_path)
     else:
-        src_code = sort_src_funcs(src_path, sort_types[inp_sort_type])
+        src_code = sort_src_funcs(
+            src_path, sort_types[inp_sort_type], rename_funcs=inp_rename
+        )
 
     test_code = sort_test_funcs(test_path, src_code)
 
-    io.save_modified_code(src_code, f"{src_path}_{inp_sort_type}.py")
-    io.save_modified_code(test_code, f"{test_path}_{inp_sort_type}.py")
+    io.save_modified_code(
+        src_code, src_path.replace(".py", f"_{inp_sort_type}.py")
+    )
+    io.save_modified_code(
+        test_code, test_path.replace(".py", f"_{inp_sort_type}.py")
+    )
 
     return True
