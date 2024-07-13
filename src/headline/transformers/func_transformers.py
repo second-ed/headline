@@ -1,3 +1,5 @@
+import logging
+
 import attr
 import libcst as cst
 from attr.validators import instance_of
@@ -6,6 +8,8 @@ from headline.utils import (
     get_func_name_edit,
     get_leading_lines,
 )
+
+logger = logging.getLogger()
 
 
 @attr.define
@@ -68,6 +72,10 @@ class FuncTransformer(cst.CSTTransformer):
             name_edit = get_func_name_edit(
                 func_name, list(self.func_defs.keys()), self.private_funcs
             )
+            logger.debug(f"{func_name = }")
+            logger.debug(f"{list(self.func_defs.keys()) = }")
+            logger.debug(f"{self.private_funcs = }")
+            logger.debug(f"{name_edit = }")
             if name_edit:
                 updated_node = updated_node.with_changes(
                     name=cst.Name(value=name_edit)
