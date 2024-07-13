@@ -8,9 +8,7 @@ from headline.utils import (
     is_not_private_and_has_leading_underscore,
     is_private_and_has_no_leading_underscore,
     remove_duplicate_calls,
-    sort_func_names,
 )
-from headline.visitors.func_visitors import FuncCall
 
 
 @pytest.mark.parametrize(
@@ -22,29 +20,29 @@ def test_remove_duplicate_calls(calls, expected_result, expected_context):
         assert remove_duplicate_calls(calls) == expected_result
 
 
-@pytest.mark.parametrize(
-    "calls, expected_result, expected_context",
-    [
-        (
-            [
-                FuncCall("a", ["c", "d"], []),
-                FuncCall("b", [], ["d"]),
-                FuncCall("c", ["d"], ["a"]),
-                FuncCall("d", ["c"], ["a", "b"]),
-            ],
-            [
-                FuncCall("a", ["c", "d"], []),
-                FuncCall("c", ["d"], ["a"]),
-                FuncCall("b", [], ["d"]),
-                FuncCall("d", ["c"], ["a", "b"]),
-            ],
-            does_not_raise(),
-        )
-    ],
-)
-def test_sort_func_names(calls, expected_result, expected_context):
-    with expected_context:
-        assert sort_func_names(calls) == expected_result
+# @pytest.mark.parametrize(
+#     "calls, expected_result, expected_context",
+#     [
+#         (
+#             [
+#                 FuncDef("a", ["c", "d"], []),
+#                 FuncDef("b", [], ["d"]),
+#                 FuncDef("c", ["d"], ["a"]),
+#                 FuncDef("d", ["c"], ["a", "b"]),
+#             ],
+#             [
+#                 FuncDef("a", ["c", "d"], []),
+#                 FuncDef("c", ["d"], ["a"]),
+#                 FuncDef("b", [], ["d"]),
+#                 FuncDef("d", ["c"], ["a", "b"]),
+#             ],
+#             does_not_raise(),
+#         )
+#     ],
+# )
+# def test_sort_func_names(calls, expected_result, expected_context):
+#     with expected_context:
+#         assert sort_func_names(calls) == expected_result
 
 
 @pytest.mark.parametrize(

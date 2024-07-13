@@ -1,14 +1,14 @@
+import re
+
 import libcst as cst
+
+
+def strip_test_prefix_suffix(input_str: str) -> str:
+    return re.sub(r"(^test_|_test$)", "", input_str)
 
 
 def remove_duplicate_calls(calls: list) -> list:
     return list(dict.fromkeys(calls))
-
-
-def sort_func_names(funcs):
-    return sorted(
-        funcs, key=lambda x: (len(x.called), -len(x.calls), x.name.strip("_"))
-    )
 
 
 def is_not_private_and_has_leading_underscore(

@@ -1,5 +1,5 @@
 # @pytest.fixture
-# def get_func_calls():
+# def get_func_defs():
 #     return [
-#         FuncCall()
+#         FuncDef()
 #     ]
