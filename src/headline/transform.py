@@ -92,7 +92,7 @@ def sort_src_funcs_and_tests(
 
     test_code = sort_test_funcs(test_path, src_code)
 
-    io.save_modified_code(src_code, f"./src_{inp_sort_type}.py")
-    io.save_modified_code(test_code, f"./tests_{inp_sort_type}.py")
+    io.save_modified_code(src_code, f"{src_path}_{inp_sort_type}.py")
+    io.save_modified_code(test_code, f"{test_path}_{inp_sort_type}.py")
 
     return True
