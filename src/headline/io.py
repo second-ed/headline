@@ -1,17 +1,27 @@
 import glob
+import logging
 import os
 from typing import List
 
 from headline.utils import strip_test_prefix_suffix
 
+from ._logger import compress_logging_value
+
+logger = logging.getLogger()
+
 
 def get_src_code(path: str) -> str:
+    for key, val in locals().items():
+        logger.debug(f"{key} = {compress_logging_value(val)}")
+
     with open(path, "r") as f:
         src_code = f.read()
     return src_code
 
 
 def save_modified_code(modified_code: str, filepath: str) -> bool:
+    for key, val in locals().items():
+        logger.debug(f"{key} = {compress_logging_value(val)}")
     with open(filepath, "w") as f:
         f.write(modified_code)
     return True
@@ -20,6 +30,8 @@ def save_modified_code(modified_code: str, filepath: str) -> bool:
 def find_files_in_folders(
     all_files: List[str], search_folders: List[str]
 ) -> List[str]:
+    for key, val in locals().items():
+        logger.debug(f"{key} = {compress_logging_value(val)}")
     return [
         f
         for f in all_files
@@ -30,6 +42,8 @@ def find_files_in_folders(
 def find_matching_files(
     src_files: List[str], test_files: List[str]
 ) -> List[str]:
+    for key, val in locals().items():
+        logger.debug(f"{key} = {compress_logging_value(val)}")
     matching_files = []
 
     for f in src_files:
@@ -45,6 +59,8 @@ def find_matching_files(
 
 
 def get_matching_files(current_location: str):
+    for key, val in locals().items():
+        logger.debug(f"{key} = {compress_logging_value(val)}")
     all_files = glob.glob(f"{current_location}/**/**.py", recursive=True)
     src_files = find_files_in_folders(all_files, ["src"])
     test_files = find_files_in_folders(all_files, ["tests"])

@@ -1,3 +1,4 @@
+import logging
 from typing import Callable, List, Optional
 
 import libcst as cst
@@ -8,14 +9,24 @@ from headline.transformers.func_transformers import FuncTransformer
 from headline.utils import strip_test_prefix_suffix
 from headline.visitors.func_visitors import FuncVisitor
 
+from ._logger import compress_logging_value
+
+logger = logging.getLogger()
+
 
 def _get_src_module(src_path: str):
+    for key, val in locals().items():
+        logger.debug(f"{key} = {compress_logging_value(val)}")
+
     src_code = io.get_src_code(src_path)
     src_module = cst.parse_module(src_code)
     return src_module
 
 
 def _get_visitor(src_module) -> FuncVisitor:
+    for key, val in locals().items():
+        logger.debug(f"{key} = {compress_logging_value(val)}")
+
     src_visitor = FuncVisitor()
     src_module.visit(src_visitor)
     src_visitor.process_func_defs()
@@ -28,6 +39,9 @@ def sort_src_funcs(
     sorted_funcs: Optional[List[str]] = None,
     rename_funcs: bool = True,
 ) -> str:
+    for key, val in locals().items():
+        logger.debug(f"{key} = {compress_logging_value(val)}")
+
     if all([sorting_func is None, sorted_funcs is None]):
         raise ValueError("Must have either sorting_func or sorted_funcs")
 
@@ -50,6 +64,9 @@ def sort_test_funcs(
     test_path: str,
     src_code: str,
 ) -> str:
+    for key, val in locals().items():
+        logger.debug(f"{key} = {compress_logging_value(val)}")
+
     test_module = _get_src_module(test_path)
     test_func_defs = _get_visitor(test_module).func_defs
 
@@ -81,6 +98,9 @@ def sort_src_funcs_and_tests(
     inp_tests_only: bool,
     inp_rename: bool,
 ):
+    for key, val in locals().items():
+        logger.debug(f"{key} = {compress_logging_value(val)}")
+
     sort_types = {
         "newspaper": srt.sort_funcs_newspaper,
         "called": srt.sort_funcs_called,
