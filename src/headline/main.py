@@ -1,14 +1,3 @@
-# import logging
-# from src.headline.config import Config
-# from src.headline._logger import (
-#     get_dir_path,
-#     setup_logger,
-# )
-
-# Config().set_filepath(get_dir_path(__file__, 2, "configs/example_config.yaml"))
-
-# setup_logger(__file__, 2)
-# logger = logging.getLogger()
 import logging
 
 from headline.io import get_matching_files
