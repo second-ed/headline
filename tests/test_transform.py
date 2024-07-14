@@ -65,6 +65,17 @@ from headline._logger import get_dir_path
             "get_utils_b_manual_sorted",
             pytest.raises(ValueError),
         ),
+        pytest.param(
+            get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
+            st.sort_funcs_alphabetical,
+            None,
+            True,
+            "get_utils_b_alphabetical_rename",
+            does_not_raise(),
+            marks=pytest.mark.xfail(
+                reason="need to fix the arg and call rename methods in FuncTransformer"
+            ),
+        ),
     ],
 )
 def test_sort_src_funcs(
