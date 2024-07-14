@@ -7,11 +7,12 @@ from headline._logger import get_dir_path
 
 
 @pytest.mark.parametrize(
-    "src_path, sorting_func, rename_funcs, expected_result_fixture_name, expected_context",
+    "src_path, sorting_func, sorted_funcs, rename_funcs, expected_result_fixture_name, expected_context",
     [
         (
             get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
             st.sort_funcs_alphabetical,
+            None,
             False,
             "get_utils_b_alphabetical_sorted",
             does_not_raise(),
@@ -19,6 +20,7 @@ from headline._logger import get_dir_path
         (
             get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
             st.sort_funcs_alphabetical_inc_leading_underscores,
+            None,
             False,
             "get_utils_b_alphabetical_inc_leading_underscores_sorted",
             does_not_raise(),
@@ -26,6 +28,7 @@ from headline._logger import get_dir_path
         (
             get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
             st.sort_funcs_newspaper,
+            None,
             False,
             "get_utils_b_newspaper_sorted",
             does_not_raise(),
@@ -33,6 +36,7 @@ from headline._logger import get_dir_path
         (
             get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
             st.sort_funcs_calls,
+            None,
             False,
             "get_utils_b_calls_sorted",
             does_not_raise(),
@@ -40,9 +44,26 @@ from headline._logger import get_dir_path
         (
             get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
             st.sort_funcs_called,
+            None,
             False,
             "get_utils_b_called_sorted",
             does_not_raise(),
+        ),
+        (
+            get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
+            None,
+            ["d", "c", "e", "_b", "a"],
+            False,
+            "get_utils_b_manual_sorted",
+            does_not_raise(),
+        ),
+        (
+            get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
+            None,
+            None,
+            False,
+            "get_utils_b_manual_sorted",
+            pytest.raises(ValueError),
         ),
     ],
 )
@@ -50,6 +71,7 @@ def test_sort_src_funcs(
     request,
     src_path,
     sorting_func,
+    sorted_funcs,
     rename_funcs,
     expected_result_fixture_name,
     expected_context,
@@ -58,7 +80,10 @@ def test_sort_src_funcs(
         expected_result = request.getfixturevalue(expected_result_fixture_name)
         assert (
             tf.sort_src_funcs(
-                src_path, sorting_func=sorting_func, rename_funcs=rename_funcs
+                src_path,
+                sorting_func=sorting_func,
+                sorted_funcs=sorted_funcs,
+                rename_funcs=rename_funcs,
             )
             == expected_result
         )
