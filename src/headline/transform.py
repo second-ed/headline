@@ -14,7 +14,7 @@ from ._logger import compress_logging_value
 logger = logging.getLogger()
 
 
-def _get_src_module(src_path: str):
+def _get_src_module(src_path: str) -> cst.Module:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
 

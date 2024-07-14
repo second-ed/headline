@@ -72,28 +72,29 @@ class FuncTransformer(cst.CSTTransformer):
             name_edit = get_func_name_edit(
                 func_name, list(self.func_defs.keys()), self.private_funcs
             )
-            logger.debug(f"{func_name = }")
-            logger.debug(f"{list(self.func_defs.keys()) = }")
-            logger.debug(f"{self.private_funcs = }")
-            logger.debug(f"{name_edit = }")
-            if name_edit:
+            # logger.debug(f"{func_name = }")
+            # logger.debug(f"{list(self.func_defs.keys()) = }")
+            # logger.debug(f"{self.private_funcs = }")
+            # logger.debug(f"{name_edit = }")
+
+            if name_edit and func_name in self.func_defs:
                 updated_node = updated_node.with_changes(
                     name=cst.Name(value=name_edit)
                 )
-            self.func_defs[func_name].def_code = updated_node
+                self.func_defs[func_name].def_code = updated_node
         return updated_node
 
     def leave_Call(
         self, original_node: cst.Call, updated_node: cst.Call
     ) -> cst.CSTNode:
-        if isinstance(updated_node.func, cst.Name):
+        if isinstance(updated_node.func, cst.Name) and self.rename_funcs:
 
             name_edit = get_func_name_edit(
                 updated_node.func.value,
                 list(self.func_defs.keys()),
                 self.private_funcs,
             )
-            if self.rename_funcs and name_edit:
+            if name_edit and updated_node.func.value in self.func_defs:
                 updated_node = updated_node.with_changes(
                     func=cst.Name(value=name_edit)
                 )

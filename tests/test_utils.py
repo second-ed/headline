@@ -8,7 +8,22 @@ from headline.utils import (
     is_not_private_and_has_leading_underscore,
     is_private_and_has_no_leading_underscore,
     remove_duplicate_calls,
+    strip_test_prefix_suffix,
 )
+
+
+@pytest.mark.parametrize(
+    "input_str, expected_result, expected_context",
+    [
+        ("test_case", "case", does_not_raise()),
+        ("case_test", "case", does_not_raise()),
+    ],
+)
+def test_strip_test_prefix_suffix(
+    input_str, expected_result, expected_context
+):
+    with expected_context:
+        assert strip_test_prefix_suffix(input_str) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -18,31 +33,6 @@ from headline.utils import (
 def test_remove_duplicate_calls(calls, expected_result, expected_context):
     with expected_context:
         assert remove_duplicate_calls(calls) == expected_result
-
-
-# @pytest.mark.parametrize(
-#     "calls, expected_result, expected_context",
-#     [
-#         (
-#             [
-#                 FuncDef("a", ["c", "d"], []),
-#                 FuncDef("b", [], ["d"]),
-#                 FuncDef("c", ["d"], ["a"]),
-#                 FuncDef("d", ["c"], ["a", "b"]),
-#             ],
-#             [
-#                 FuncDef("a", ["c", "d"], []),
-#                 FuncDef("c", ["d"], ["a"]),
-#                 FuncDef("b", [], ["d"]),
-#                 FuncDef("d", ["c"], ["a", "b"]),
-#             ],
-#             does_not_raise(),
-#         )
-#     ],
-# )
-# def test_sort_func_names(calls, expected_result, expected_context):
-#     with expected_context:
-#         assert sort_func_names(calls) == expected_result
 
 
 @pytest.mark.parametrize(
