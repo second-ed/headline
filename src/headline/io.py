@@ -1,7 +1,7 @@
 import glob
 import logging
 import os
-from typing import List
+from typing import List, Tuple
 
 from headline.utils import strip_test_prefix_suffix
 
@@ -41,7 +41,7 @@ def find_files_in_folders(
 
 def find_matching_files(
     src_files: List[str], test_files: List[str]
-) -> List[str]:
+) -> List[Tuple[str, str]]:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
     matching_files = []
@@ -58,11 +58,13 @@ def find_matching_files(
     return matching_files
 
 
-def get_matching_files(current_location: str):
+def get_matching_files(
+    current_location: str, src_folder: str = "src", test_folder: str = "tests"
+) -> List[Tuple[str, str]]:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
     all_files = glob.glob(f"{current_location}/**/**.py", recursive=True)
-    src_files = find_files_in_folders(all_files, ["src"])
-    test_files = find_files_in_folders(all_files, ["tests"])
+    src_files = find_files_in_folders(all_files, [src_folder])
+    test_files = find_files_in_folders(all_files, [test_folder])
     matching_files = find_matching_files(src_files, test_files)
     return matching_files
