@@ -42,7 +42,7 @@ class FuncTransformer(cst.CSTTransformer):
         """
         new_body = []
         for element in updated_node.body:
-            # checking against -1 to account for more functions that aren't in the
+            # checking against len to account for more functions that aren't in the
             # sorted list (e.g. when comparing src names to tests)
             if (
                 isinstance(element, cst.FunctionDef)
@@ -68,6 +68,7 @@ class FuncTransformer(cst.CSTTransformer):
         self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef
     ) -> cst.FunctionDef:
         if self.rename_funcs:
+
             func_name = updated_node.name.value
             name_edit = get_func_name_edit(
                 func_name, list(self.func_defs.keys()), self.private_funcs
@@ -77,7 +78,7 @@ class FuncTransformer(cst.CSTTransformer):
             # logger.debug(f"{self.private_funcs = }")
             # logger.debug(f"{name_edit = }")
 
-            if name_edit and func_name in self.func_defs:
+            if name_edit:
                 updated_node = updated_node.with_changes(
                     name=cst.Name(value=name_edit)
                 )
@@ -94,7 +95,7 @@ class FuncTransformer(cst.CSTTransformer):
                 list(self.func_defs.keys()),
                 self.private_funcs,
             )
-            if name_edit and updated_node.func.value in self.func_defs:
+            if name_edit:
                 updated_node = updated_node.with_changes(
                     func=cst.Name(value=name_edit)
                 )
@@ -105,14 +106,12 @@ class FuncTransformer(cst.CSTTransformer):
     ) -> cst.Arg:
         if isinstance(updated_node.value, cst.Name) and self.rename_funcs:
             func_name = updated_node.value.value
-
-            if func_name in self.func_defs:
-                name_edit = get_func_name_edit(
-                    func_name, list(self.func_defs.keys()), self.private_funcs
+            name_edit = get_func_name_edit(
+                func_name, list(self.func_defs.keys()), self.private_funcs
+            )
+            if name_edit:
+                updated_node = updated_node.with_changes(
+                    value=cst.Name(value=name_edit)
                 )
-                if name_edit:
-                    updated_node = updated_node.with_changes(
-                        value=cst.Name(value=name_edit)
-                    )
-                # self.func_defs[func_name].def_code = updated_node
+            # self.func_defs[func_name].def_code = updated_node
         return updated_node

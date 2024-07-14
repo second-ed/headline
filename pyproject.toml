@@ -35,6 +35,13 @@ lint.extend-select = ["I", "W"]
 lint.ignore = ["E741"]
 line-length = 79
 
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+]
+
+
 [tool.coverage.run]
 branch = true
 source = ["src"]

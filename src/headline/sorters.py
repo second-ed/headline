@@ -42,7 +42,7 @@ def sort_funcs_alphabetical(funcs: List[FuncDef]) -> List[str]:
     return [f.name for f in sorted_funcs if f.indent == 0]
 
 
-def sort_funcs_alphabetical_include_leading_underscores(
+def sort_funcs_alphabetical_inc_leading_underscores(
     funcs: List[FuncDef],
 ) -> List[str]:
     for key, val in locals().items():

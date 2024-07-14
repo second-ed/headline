@@ -106,7 +106,7 @@ def sort_src_funcs_and_tests(
         "called": srt.sort_funcs_called,
         "calls": srt.sort_funcs_calls,
         "alphabetical": srt.sort_funcs_alphabetical,
-        "alphabetical_include_leading_underscores": srt.sort_funcs_alphabetical_include_leading_underscores,
+        "alphabetical_include_leading_underscores": srt.sort_funcs_alphabetical_inc_leading_underscores,
     }
 
     if inp_tests_only:
