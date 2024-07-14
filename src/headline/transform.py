@@ -37,7 +37,7 @@ def sort_src_funcs(
     src_path: str,
     sorting_func: Optional[Callable] = None,
     sorted_funcs: Optional[List[str]] = None,
-    rename_funcs: bool = True,
+    rename_funcs: bool = False,
 ) -> str:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
@@ -124,5 +124,4 @@ def sort_src_funcs_and_tests(
     io.save_modified_code(
         test_code, test_path.replace(".py", f"_{inp_sort_type}.py")
     )
-
     return True
