@@ -2,6 +2,7 @@ from contextlib import nullcontext as does_not_raise
 
 import pytest
 from headline import io
+from headline._logger import get_dir_path
 
 
 @pytest.mark.parametrize(
@@ -90,3 +91,36 @@ def test_find_matching_files(
 ) -> None:
     with expected_context:
         assert io.find_matching_files(src_files, test_files) == expected_result
+
+
+@pytest.mark.parametrize(
+    "current_location, src_folder, test_folder, expected_result, expected_context",
+    [
+        (
+            get_dir_path(__file__, 0, "mock_package"),
+            "mock_package/src",
+            "mock_package/tests",
+            [
+                (
+                    get_dir_path(__file__, 0, "mock_package/src/utils_a.py"),
+                    get_dir_path(
+                        __file__, 0, "mock_package/tests/test_utils_a.py"
+                    ),
+                )
+            ],
+            does_not_raise(),
+        ),
+    ],
+)
+def test_get_matching_files(
+    current_location,
+    src_folder,
+    test_folder,
+    expected_result,
+    expected_context,
+) -> None:
+    with expected_context:
+        assert (
+            io.get_matching_files(current_location, src_folder, test_folder)
+            == expected_result
+        )
