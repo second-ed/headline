@@ -1,8 +1,10 @@
+from typing import List
+
 import pytest
 
 
 @pytest.fixture
-def get_utils_b_alphabetical_sorted():
+def get_utils_b_alphabetical_sorted() -> str:
     return (
         "\ndef a():\n"
         "    return 1\n\n\n"
@@ -19,7 +21,7 @@ def get_utils_b_alphabetical_sorted():
 
 
 @pytest.fixture
-def get_utils_b_alphabetical_inc_leading_underscores_sorted():
+def get_utils_b_alphabetical_inc_leading_underscores_sorted() -> str:
     return (
         "\ndef _b():\n"
         "    return 0\n\n\n"
@@ -36,7 +38,7 @@ def get_utils_b_alphabetical_inc_leading_underscores_sorted():
 
 
 @pytest.fixture
-def get_utils_b_newspaper_sorted():
+def get_utils_b_newspaper_sorted() -> str:
     return (
         "\ndef d():\n"
         "    res = a() + _b()\n"
@@ -53,7 +55,7 @@ def get_utils_b_newspaper_sorted():
 
 
 @pytest.fixture
-def get_utils_b_calls_sorted():
+def get_utils_b_calls_sorted() -> str:
     return (
         "\ndef d():\n"
         "    res = a() + _b()\n"
@@ -70,7 +72,7 @@ def get_utils_b_calls_sorted():
 
 
 @pytest.fixture
-def get_utils_b_called_sorted():
+def get_utils_b_called_sorted() -> str:
     return (
         "\ndef a():\n"
         "    return 1\n\n\n"
@@ -86,7 +88,7 @@ def get_utils_b_called_sorted():
 
 
 @pytest.fixture
-def get_utils_b_manual_sorted():
+def get_utils_b_manual_sorted() -> str:
     return (
         "\ndef d():\n"
         "    res = a() + _b()\n"
@@ -103,7 +105,7 @@ def get_utils_b_manual_sorted():
 
 
 @pytest.fixture
-def get_utils_b_alphabetical_rename():
+def get_utils_b_alphabetical_rename() -> str:
     return (
         "\ndef _a():\n"
         "    return 1\n\n\n"
@@ -120,7 +122,7 @@ def get_utils_b_alphabetical_rename():
 
 
 @pytest.fixture
-def get_utils_b_newspaper_rename():
+def get_utils_b_newspaper_rename() -> str:
     return (
         "\ndef d():\n"
         "    res = _a() + _b()\n"
@@ -137,7 +139,7 @@ def get_utils_b_newspaper_rename():
 
 
 @pytest.fixture
-def get_mock_package_all_files():
+def get_mock_package_all_files() -> List[str]:
     return [
         "some_package/src/__init__.py",
         "some_package/src/utils_a.py",
