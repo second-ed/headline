@@ -78,7 +78,7 @@ class FuncTransformer(cst.CSTTransformer):
                 updated_node = updated_node.with_changes(
                     name=cst.Name(value=name_edit)
                 )
-            # outside of this indentation to catch call and arg changes
+            # outside of the indentation to catch call and arg changes
             self.func_defs[func_name].def_code = updated_node
         return updated_node
 
@@ -110,5 +110,4 @@ class FuncTransformer(cst.CSTTransformer):
                 updated_node = updated_node.with_changes(
                     value=cst.Name(value=name_edit)
                 )
-            # self.func_defs[func_name].def_code = updated_node
         return updated_node
