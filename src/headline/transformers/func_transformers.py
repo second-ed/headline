@@ -73,16 +73,13 @@ class FuncTransformer(cst.CSTTransformer):
             name_edit = get_func_name_edit(
                 func_name, list(self.func_defs.keys()), self.private_funcs
             )
-            # logger.debug(f"{func_name = }")
-            # logger.debug(f"{list(self.func_defs.keys()) = }")
-            # logger.debug(f"{self.private_funcs = }")
-            # logger.debug(f"{name_edit = }")
 
             if name_edit:
                 updated_node = updated_node.with_changes(
                     name=cst.Name(value=name_edit)
                 )
-                self.func_defs[func_name].def_code = updated_node
+            # outside of this indentation to catch call and arg changes
+            self.func_defs[func_name].def_code = updated_node
         return updated_node
 
     def leave_Call(

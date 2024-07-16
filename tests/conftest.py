@@ -120,6 +120,23 @@ def get_utils_b_alphabetical_rename():
 
 
 @pytest.fixture
+def get_utils_b_newspaper_rename():
+    return (
+        "\ndef d():\n"
+        "    res = _a() + _b()\n"
+        "    return res\n\n\n"
+        "def c():\n"
+        "    _a()\n\n\n"
+        "def e():\n"
+        "    _b()\n\n\n"
+        "def _a():\n"
+        "    return 1\n\n\n"
+        "def _b():\n"
+        "    return 0\n\n\n"
+    )
+
+
+@pytest.fixture
 def get_mock_package_all_files():
     return [
         "some_package/src/__init__.py",
