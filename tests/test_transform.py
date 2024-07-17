@@ -73,6 +73,14 @@ from headline._logger import get_dir_path
             "get_utils_b_alphabetical_rename",
             does_not_raise(),
         ),
+        (
+            get_dir_path(__file__, 0, "mock_package/src/utils_c.py"),
+            st.sort_funcs_newspaper,
+            None,
+            True,
+            "get_utils_c_newspaper_rename",
+            does_not_raise(),
+        ),
     ],
 )
 def test_sort_src_funcs(
