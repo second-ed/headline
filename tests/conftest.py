@@ -1,6 +1,27 @@
 from typing import List
 
+import libcst as cst
 import pytest
+
+
+@pytest.fixture
+def get_func_no_comment():
+    return "def test():\n    pass\n"
+
+
+@pytest.fixture
+def get_func_def_no_comment(get_func_no_comment):
+    return cst.parse_statement(get_func_no_comment)
+
+
+@pytest.fixture
+def get_func_with_comment():
+    return "#an expected comment\ndef test():\n    pass\n"
+
+
+@pytest.fixture
+def get_func_def_with_comment(get_func_with_comment):
+    return cst.parse_statement(get_func_with_comment)
 
 
 @pytest.fixture
@@ -152,6 +173,7 @@ def get_utils_c_newspaper_rename() -> str:
         "        data_dict[key] = _rename_data(value)\n\n"
         "    merged_data = _merge_data(data_dict)\n\n"
         "    return _save_data(merged_data, filepath)\n\n\n"
+        "# this is a comment related to the function below\n"
         "def _read_data(filepath: str) -> pd.DataFrame:\n"
         "    if _check_extension(filepath):\n"
         "        return pd.DataFrame({})\n"

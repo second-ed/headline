@@ -50,10 +50,11 @@ class FuncTransformer(cst.CSTTransformer):
             ):
                 # get the sorted function by index and remove leading_lines to avoid
                 # functions having more than 2 lines between them
-                new_func = self.func_defs[
-                    self.sorted_func_names[self.def_index]
-                ].def_code.with_changes(
-                    leading_lines=get_leading_lines(self.def_index)
+                func_name = self.sorted_func_names[self.def_index]
+                new_func = self.func_defs[func_name].def_code.with_changes(
+                    leading_lines=get_leading_lines(
+                        self.func_defs[func_name].def_code, self.def_index
+                    )
                 )
                 new_body.append(new_func)
                 new_body.extend([cst.EmptyLine(), cst.EmptyLine()])

@@ -65,10 +65,14 @@ def get_func_name_edit(
     return ""
 
 
-def get_leading_lines(idx: int) -> list:
+def get_leading_lines(def_code: cst.FunctionDef, idx: int) -> list:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
 
     if idx == 0:
-        return [cst.EmptyLine()]
-    return []
+        return [cst.EmptyLine()] + get_leading_comments(def_code)
+    return [] + get_leading_comments(def_code)
+
+
+def get_leading_comments(def_code) -> list:
+    return [l for l in def_code.leading_lines if l.comment]

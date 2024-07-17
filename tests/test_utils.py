@@ -97,20 +97,82 @@ def test_get_func_name_edit(
 
 
 @pytest.mark.parametrize(
-    "idx, expected_result, expected_context",
+    "fixture_name, idx, expected_result, expected_context",
     [
-        (-1, [], does_not_raise()),
+        ("get_func_def_no_comment", -1, [], does_not_raise()),
         (
+            "get_func_def_no_comment",
             0,
             [cst.EmptyLine()],
             does_not_raise(),
         ),
-        (1, [], does_not_raise()),
+        ("get_func_def_no_comment", 1, [], does_not_raise()),
+        (
+            "get_func_def_with_comment",
+            -1,
+            [
+                cst.EmptyLine(
+                    indent=True,
+                    whitespace=cst.SimpleWhitespace(
+                        value="",
+                    ),
+                    comment=cst.Comment(
+                        value="#an expected comment",
+                    ),
+                    newline=cst.Newline(
+                        value=None,
+                    ),
+                )
+            ],
+            does_not_raise(),
+        ),
+        (
+            "get_func_def_with_comment",
+            0,
+            [
+                cst.EmptyLine(),
+                cst.EmptyLine(
+                    indent=True,
+                    whitespace=cst.SimpleWhitespace(
+                        value="",
+                    ),
+                    comment=cst.Comment(
+                        value="#an expected comment",
+                    ),
+                    newline=cst.Newline(
+                        value=None,
+                    ),
+                ),
+            ],
+            does_not_raise(),
+        ),
+        (
+            "get_func_def_with_comment",
+            1,
+            [
+                cst.EmptyLine(
+                    indent=True,
+                    whitespace=cst.SimpleWhitespace(
+                        value="",
+                    ),
+                    comment=cst.Comment(
+                        value="#an expected comment",
+                    ),
+                    newline=cst.Newline(
+                        value=None,
+                    ),
+                )
+            ],
+            does_not_raise(),
+        ),
     ],
 )
-def test_get_leading_lines(idx, expected_result, expected_context) -> None:
+def test_get_leading_lines(
+    request, fixture_name, idx, expected_result, expected_context
+) -> None:
     with expected_context:
-        res = get_leading_lines(idx)
+        def_code = request.getfixturevalue(fixture_name)
+        res = get_leading_lines(def_code, idx)
         assert len(res) == len(expected_result)
 
         for res_line, exp_line in zip(res, expected_result):
