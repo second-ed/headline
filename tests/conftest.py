@@ -5,6 +5,31 @@ import pytest
 
 
 @pytest.fixture
+def get_transformer_no_name_changes():
+    return {}
+
+
+@pytest.fixture
+def get_transformer_utils_b_name_changes():
+    return {"a": "_a"}
+
+
+@pytest.fixture
+def get_transformer_utils_c_name_changes():
+    return {
+        "check_extension": "_check_extension",
+        "clean_data": "_clean_data",
+        "filepath_exists": "_filepath_exists",
+        "merge_data": "_merge_data",
+        "read_data": "_read_data",
+        "rename_data": "_rename_data",
+        "replacer": "_replacer",
+        "save_data": "_save_data",
+        "transform": "_transform",
+    }
+
+
+@pytest.fixture
 def get_func_no_comment():
     return "def test():\n    pass\n"
 

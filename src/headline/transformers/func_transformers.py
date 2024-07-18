@@ -7,6 +7,7 @@ from attr.validators import instance_of
 from headline.utils import (
     get_func_name_edit,
     get_leading_lines,
+    get_name_change,
 )
 
 logger = logging.getLogger()
@@ -17,7 +18,10 @@ class FuncTransformer(cst.CSTTransformer):
     func_defs: dict = attr.ib(validator=[instance_of(dict)])
     sorted_func_names: list = attr.ib(validator=[instance_of(list)])
     private_funcs: list = attr.ib(validator=[instance_of(list)], init=False)
+    name_changes: dict = attr.ib(validator=[instance_of(dict)], init=False)
     rename_funcs: bool = attr.ib(default=True, validator=[instance_of(bool)])  # type: ignore
+    collect_name_changes: bool = attr.ib(default=True, validator=[instance_of(bool)])  # type: ignore
+    apply_name_changes: bool = attr.ib(default=False, validator=[instance_of(bool)])  # type: ignore
     def_index: int = attr.ib(default=0, validator=[instance_of(int)])  # type: ignore
 
     def __attrs_post_init__(self):
@@ -26,6 +30,7 @@ class FuncTransformer(cst.CSTTransformer):
             for f in self.func_defs.values()
             if (f.indent > 0) or (len(f.called) > 0)
         ]
+        self.name_changes = {}
 
     def leave_Module(
         self, original_node: cst.Module, updated_node: cst.Module
@@ -79,6 +84,10 @@ class FuncTransformer(cst.CSTTransformer):
                 updated_node = updated_node.with_changes(
                     name=cst.Name(value=name_edit)
                 )
+
+                if self.collect_name_changes:
+                    self.name_changes[func_name] = name_edit
+
             # outside of the indentation to catch call and arg changes
             self.func_defs[func_name].def_code = updated_node
         return updated_node
@@ -97,6 +106,14 @@ class FuncTransformer(cst.CSTTransformer):
                 updated_node = updated_node.with_changes(
                     func=cst.Name(value=name_edit)
                 )
+
+            if self.apply_name_changes:
+                name_change = get_name_change(
+                    updated_node.func.value, self.name_changes
+                )
+                updated_node = updated_node.with_changes(
+                    func=cst.Name(value=name_change)
+                )
         return updated_node
 
     def leave_Arg(
@@ -110,5 +127,13 @@ class FuncTransformer(cst.CSTTransformer):
             if name_edit:
                 updated_node = updated_node.with_changes(
                     value=cst.Name(value=name_edit)
+                )
+
+            if self.apply_name_changes:
+                name_change = get_name_change(
+                    updated_node.value, self.name_changes
+                )
+                updated_node = updated_node.with_changes(
+                    func=cst.Name(value=name_change)
                 )
         return updated_node

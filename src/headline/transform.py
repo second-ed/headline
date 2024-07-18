@@ -1,5 +1,5 @@
 import logging
-from typing import Callable, List, Optional
+from typing import Callable, Dict, List, Optional, Tuple
 
 import libcst as cst
 
@@ -38,7 +38,7 @@ def sort_src_funcs(
     sorting_func: Optional[Callable] = None,
     sorted_funcs: Optional[List[str]] = None,
     rename_funcs: bool = False,
-) -> str:
+) -> Tuple[str, Dict[str, str]]:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
 
@@ -57,12 +57,13 @@ def sort_src_funcs(
         rename_funcs=rename_funcs,
     )
     modified_tree = src_module.visit(transformer)
-    return modified_tree.code
+    return modified_tree.code, transformer.name_changes
 
 
 def sort_test_funcs(
     test_path: str,
     src_code: str,
+    call_name_changes: Dict[str, str],
 ) -> str:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
@@ -86,6 +87,8 @@ def sort_test_funcs(
         normed_test_func_defs,
         sorted_test_order,  # type: ignore
         rename_funcs=False,
+        collect_name_changes=False,
+        apply_name_changes=bool(call_name_changes),
     )
     modified_tree = test_module.visit(transformer)
     return modified_tree.code
@@ -111,12 +114,13 @@ def sort_src_funcs_and_tests(
 
     if inp_tests_only:
         src_code = io.get_src_code(src_path)
+        name_changes = {}
     else:
-        src_code = sort_src_funcs(
+        src_code, name_changes = sort_src_funcs(
             src_path, sort_types[inp_sort_type], rename_funcs=inp_rename
         )
 
-    test_code = sort_test_funcs(test_path, src_code)
+    test_code = sort_test_funcs(test_path, src_code, name_changes)
 
     io.save_modified_code(
         src_code, src_path.replace(".py", f"_{inp_sort_type}.py")

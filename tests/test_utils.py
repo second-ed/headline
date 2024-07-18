@@ -5,6 +5,7 @@ import pytest
 from headline.utils import (
     get_func_name_edit,
     get_leading_lines,
+    get_name_change,
     is_not_private_and_has_leading_underscore,
     is_private_and_has_no_leading_underscore,
     remove_duplicate_calls,
@@ -177,3 +178,15 @@ def test_get_leading_lines(
 
         for res_line, exp_line in zip(res, expected_result):
             assert res_line.deep_equals(exp_line)
+
+
+@pytest.mark.parametrize(
+    "item, changes, expected_result, expected_context",
+    [
+        ("a", {"a": "_a", "b": "_b", "c": "_c"}, "_a", does_not_raise()),
+        ("d", {"a": "_a", "b": "_b", "c": "_c"}, "d", does_not_raise()),
+    ],
+)
+def test_get_name_change(item, changes, expected_result, expected_context):
+    with expected_context:
+        assert get_name_change(item, changes) == expected_result

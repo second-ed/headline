@@ -7,7 +7,7 @@ from headline._logger import get_dir_path
 
 
 @pytest.mark.parametrize(
-    "src_path, sorting_func, sorted_funcs, rename_funcs, expected_result_fixture_name, expected_context",
+    "src_path, sorting_func, sorted_funcs, rename_funcs, expected_result_fixture_name, expected_name_changes_fixture_name, expected_context",
     [
         (
             get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
@@ -15,6 +15,7 @@ from headline._logger import get_dir_path
             None,
             False,
             "get_utils_b_alphabetical_sorted",
+            "get_transformer_no_name_changes",
             does_not_raise(),
         ),
         (
@@ -23,6 +24,7 @@ from headline._logger import get_dir_path
             None,
             False,
             "get_utils_b_alphabetical_inc_leading_underscores_sorted",
+            "get_transformer_no_name_changes",
             does_not_raise(),
         ),
         (
@@ -31,6 +33,7 @@ from headline._logger import get_dir_path
             None,
             False,
             "get_utils_b_newspaper_sorted",
+            "get_transformer_no_name_changes",
             does_not_raise(),
         ),
         (
@@ -39,6 +42,7 @@ from headline._logger import get_dir_path
             None,
             False,
             "get_utils_b_calls_sorted",
+            "get_transformer_no_name_changes",
             does_not_raise(),
         ),
         (
@@ -47,6 +51,7 @@ from headline._logger import get_dir_path
             None,
             False,
             "get_utils_b_called_sorted",
+            "get_transformer_no_name_changes",
             does_not_raise(),
         ),
         (
@@ -55,6 +60,7 @@ from headline._logger import get_dir_path
             ["d", "c", "e", "_b", "a"],
             False,
             "get_utils_b_manual_sorted",
+            "get_transformer_no_name_changes",
             does_not_raise(),
         ),
         (
@@ -63,6 +69,7 @@ from headline._logger import get_dir_path
             None,
             False,
             "get_utils_b_manual_sorted",
+            "get_transformer_no_name_changes",
             pytest.raises(ValueError),
         ),
         (
@@ -71,6 +78,7 @@ from headline._logger import get_dir_path
             None,
             True,
             "get_utils_b_alphabetical_rename",
+            "get_transformer_utils_b_name_changes",
             does_not_raise(),
         ),
         (
@@ -79,6 +87,7 @@ from headline._logger import get_dir_path
             None,
             True,
             "get_utils_c_newspaper_rename",
+            "get_transformer_utils_c_name_changes",
             does_not_raise(),
         ),
     ],
@@ -90,16 +99,19 @@ def test_sort_src_funcs(
     sorted_funcs,
     rename_funcs,
     expected_result_fixture_name,
+    expected_name_changes_fixture_name,
     expected_context,
 ):
     with expected_context:
-        expected_result = request.getfixturevalue(expected_result_fixture_name)
-        assert (
-            tf.sort_src_funcs(
-                src_path,
-                sorting_func=sorting_func,
-                sorted_funcs=sorted_funcs,
-                rename_funcs=rename_funcs,
-            )
-            == expected_result
+        expected_code = request.getfixturevalue(expected_result_fixture_name)
+        expected_name_changes = request.getfixturevalue(
+            expected_name_changes_fixture_name
         )
+        code, name_changes = tf.sort_src_funcs(
+            src_path,
+            sorting_func=sorting_func,
+            sorted_funcs=sorted_funcs,
+            rename_funcs=rename_funcs,
+        )
+        assert code == expected_code
+        assert name_changes == expected_name_changes

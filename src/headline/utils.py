@@ -1,5 +1,6 @@
 import logging
 import re
+from typing import Dict
 
 import libcst as cst
 
@@ -76,3 +77,9 @@ def get_leading_lines(def_code: cst.FunctionDef, idx: int) -> list:
 
 def get_leading_comments(def_code) -> list:
     return [l for l in def_code.leading_lines if l.comment]
+
+
+def get_name_change(item: str, changes: Dict[str, str]) -> str:
+    if item in changes:
+        return changes[item]
+    return item
