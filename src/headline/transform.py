@@ -89,7 +89,9 @@ def sort_test_funcs(
         rename_funcs=False,
         collect_name_changes=False,
         apply_name_changes=bool(call_name_changes),
+        is_test_file=True,
     )
+    transformer.name_changes = call_name_changes
     modified_tree = test_module.visit(transformer)
     return modified_tree.code
 

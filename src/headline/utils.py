@@ -83,3 +83,9 @@ def get_name_change(item: str, changes: Dict[str, str]) -> str:
     if item in changes:
         return changes[item]
     return item
+
+
+def get_normed_test_key(item: str, is_test: bool) -> str:
+    if is_test:
+        return strip_test_prefix_suffix(item)
+    return item

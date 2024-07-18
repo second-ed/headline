@@ -2,7 +2,16 @@ from contextlib import nullcontext as does_not_raise
 
 import pytest
 
-from tests.mock_package.src import utils_a as ua
+from tests.mock_package.src.utils_a import (
+    _subtract,
+    add,
+    divide,
+    factorial,
+    fibonacci,
+    is_prime,
+    multiply,
+    power,
+)
 
 
 @pytest.mark.parametrize(
@@ -13,7 +22,7 @@ from tests.mock_package.src import utils_a as ua
 )
 def test_multiply(a, b, expected_result, expected_context):
     with expected_context:
-        assert ua.multiply(a, b) == expected_result
+        assert multiply(a, b) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -24,7 +33,7 @@ def test_multiply(a, b, expected_result, expected_context):
 )
 def test_add(a, b, expected_result, expected_context):
     with expected_context:
-        assert ua.add(a, b) == expected_result
+        assert add(a, b) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -37,7 +46,7 @@ def test_add(a, b, expected_result, expected_context):
 )
 def test_subtract(a, b, expected_result, expected_context):
     with expected_context:
-        assert ua._subtract(a, b) == expected_result
+        assert _subtract(a, b) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -50,7 +59,7 @@ def test_subtract(a, b, expected_result, expected_context):
 )
 def test_divide(a, b, expected_result, expected_context):
     with expected_context:
-        assert ua.divide(a, b) == expected_result
+        assert divide(a, b) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -68,7 +77,7 @@ def test_divide(a, b, expected_result, expected_context):
 )
 def test_power(base, exponent, expected_result, expected_context):
     with expected_context:
-        assert ua.power(base, exponent) == expected_result
+        assert power(base, exponent) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -88,7 +97,7 @@ def test_power(base, exponent, expected_result, expected_context):
 )
 def test_factorial(n, expected_result, expected_context):
     with expected_context:
-        assert ua.factorial(n) == expected_result
+        assert factorial(n) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -108,7 +117,7 @@ def test_factorial(n, expected_result, expected_context):
 )
 def test_fibonacci(n, expected_result, expected_context):
     with expected_context:
-        assert ua.fibonacci(n) == expected_result
+        assert fibonacci(n) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -122,4 +131,4 @@ def test_fibonacci(n, expected_result, expected_context):
 )
 def test_is_prime(n, expected_result, expected_context):
     with expected_context:
-        assert ua.is_prime(n) == expected_result
+        assert is_prime(n) == expected_result
