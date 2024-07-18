@@ -21,7 +21,6 @@ class FuncTransformer(cst.CSTTransformer):
     private_funcs: list = attr.ib(validator=[instance_of(list)], init=False)
     name_changes: dict = attr.ib(validator=[instance_of(dict)], init=False)
     rename_funcs: bool = attr.ib(default=True, validator=[instance_of(bool)])  # type: ignore
-    collect_name_changes: bool = attr.ib(default=True, validator=[instance_of(bool)])  # type: ignore
     apply_name_changes: bool = attr.ib(default=False, validator=[instance_of(bool)])  # type: ignore
     is_test_file: bool = attr.ib(default=False, validator=[instance_of(bool)])  # type: ignore
     def_index: int = attr.ib(default=0, validator=[instance_of(int)])  # type: ignore
@@ -115,8 +114,6 @@ class FuncTransformer(cst.CSTTransformer):
 
             if self.apply_name_changes:
                 name_change = get_name_change(func_name, self.name_changes)
-                print(f"{func_name = }")
-                print(f"{name_change = }")
                 updated_node = updated_node.with_changes(
                     func=cst.Name(value=name_change)
                 )
@@ -141,9 +138,6 @@ class FuncTransformer(cst.CSTTransformer):
 
             if self.apply_name_changes:
                 name_change = get_name_change(func_name, self.name_changes)
-                print(f"{self.name_changes = }")
-                print(f"{func_name = }")
-                print(f"{name_change = }")
                 updated_node = updated_node.with_changes(
                     value=cst.Name(value=name_change)
                 )

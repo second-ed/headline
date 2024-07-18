@@ -87,7 +87,6 @@ def sort_test_funcs(
         normed_test_func_defs,
         sorted_test_order,  # type: ignore
         rename_funcs=False,
-        collect_name_changes=False,
         apply_name_changes=bool(call_name_changes),
         is_test_file=True,
     )
