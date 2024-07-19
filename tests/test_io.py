@@ -106,7 +106,13 @@ def test_find_matching_files(
                     get_dir_path(
                         __file__, 0, "mock_package/tests/test_utils_a.py"
                     ),
-                )
+                ),
+                (
+                    get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
+                    get_dir_path(
+                        __file__, 0, "mock_package/tests/test_utils_b.py"
+                    ),
+                ),
             ],
             does_not_raise(),
         ),
