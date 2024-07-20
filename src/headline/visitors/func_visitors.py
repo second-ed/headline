@@ -20,6 +20,7 @@ class FuncDef:
 
 @attr.define
 class FuncVisitor(cst.CSTVisitor):
+    imports: dict = attr.ib(default=None)
     func_defs: dict = attr.ib(default=None)
     is_called: list = attr.ib(default=None)
     depth: int = attr.ib(default=0, validator=[instance_of(int)])  # type: ignore
@@ -29,10 +30,24 @@ class FuncVisitor(cst.CSTVisitor):
     top_level_funcs: list = attr.ib(validator=[instance_of(list)], init=False)
 
     def __attrs_post_init__(self):
+        self.imports = {}
         self.func_defs = {}
         self.is_called = []
         self.calls = defaultdict(list)
         self.called_by = defaultdict(list)
+
+    def visit_Import(self, node: cst.Import):
+        for alias in node.names:
+            name = alias.name.value
+            asname = alias.asname.name.value if alias.asname else name
+            self.imports[name] = {"name": name, "as_name": asname}
+
+    def visit_ImportFrom(self, node: cst.ImportFrom):
+        module = self._get_full_module_name(node.module)
+        for alias in node.names:
+            name = alias.name.value
+            asname = alias.asname.name.value if alias.asname else name
+            self.imports[module] = {"name": name, "as_name": asname}
 
     def visit_FunctionDef(self, node: cst.FunctionDef) -> None:
         self.curr_func = node.name.value
@@ -64,3 +79,15 @@ class FuncVisitor(cst.CSTVisitor):
             self.func_defs[f].called = remove_duplicate_calls(
                 [c for c in self.called_by[f] if c in self.top_level_funcs]
             )
+
+    def _get_full_module_name(self, module):
+        if isinstance(module, cst.Attribute):
+            return (
+                self._get_full_module_name(module.value)
+                + "."
+                + module.attr.value
+            )
+        elif isinstance(module, cst.Name):
+            return module.value
+        else:
+            return None
