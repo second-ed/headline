@@ -1,8 +1,9 @@
 import logging
+from typing import Optional
 
 import attr
 import libcst as cst
-from attr.validators import instance_of
+from attr.validators import instance_of, optional
 
 from headline.utils import (
     get_func_name_edit,
@@ -20,6 +21,9 @@ class FuncTransformer(cst.CSTTransformer):
     sorted_func_names: list = attr.ib(validator=[instance_of(list)])
     private_funcs: list = attr.ib(validator=[instance_of(list)], init=False)
     name_changes: dict = attr.ib(validator=[instance_of(dict)], init=False)
+    alias: Optional[str] = attr.ib(
+        default=None, validator=[optional(instance_of(str))]
+    )
     rename_funcs: bool = attr.ib(default=True, validator=[instance_of(bool)])  # type: ignore
     apply_name_changes: bool = attr.ib(default=False, validator=[instance_of(bool)])  # type: ignore
     is_test_file: bool = attr.ib(default=False, validator=[instance_of(bool)])  # type: ignore
