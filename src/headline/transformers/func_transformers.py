@@ -1,9 +1,8 @@
 import logging
-from typing import Optional
 
 import attr
 import libcst as cst
-from attr.validators import instance_of, optional
+from attr.validators import instance_of
 
 from headline.utils import (
     get_func_name_edit,
@@ -21,9 +20,6 @@ class FuncTransformer(cst.CSTTransformer):
     sorted_func_names: list = attr.ib(validator=[instance_of(list)])
     private_funcs: list = attr.ib(validator=[instance_of(list)], init=False)
     name_changes: dict = attr.ib(validator=[instance_of(dict)], init=False)
-    alias: Optional[str] = attr.ib(
-        default=None, validator=[optional(instance_of(str))]
-    )
     rename_funcs: bool = attr.ib(default=True, validator=[instance_of(bool)])  # type: ignore
     apply_name_changes: bool = attr.ib(default=False, validator=[instance_of(bool)])  # type: ignore
     is_test_file: bool = attr.ib(default=False, validator=[instance_of(bool)])  # type: ignore
@@ -120,6 +116,32 @@ class FuncTransformer(cst.CSTTransformer):
                 name_change = get_name_change(func_name, self.name_changes)
                 updated_node = updated_node.with_changes(
                     func=cst.Name(value=name_change)
+                )
+        return updated_node
+
+    def leave_Attribute(
+        self, original_node: cst.Attribute, updated_node: cst.Attribute
+    ) -> cst.CSTNode:
+        if isinstance(updated_node.attr, cst.Name):
+            func_name = get_normed_test_key(
+                updated_node.attr.value, self.is_test_file
+            )
+
+            if self.rename_funcs:
+                name_edit = get_func_name_edit(
+                    func_name,
+                    list(self.func_defs.keys()),
+                    self.private_funcs,
+                )
+                if name_edit:
+                    updated_node = updated_node.with_changes(
+                        attr=cst.Name(value=name_edit)
+                    )
+
+            if self.apply_name_changes:
+                name_change = get_name_change(func_name, self.name_changes)
+                updated_node = updated_node.with_changes(
+                    attr=cst.Name(value=name_change)
                 )
         return updated_node
 

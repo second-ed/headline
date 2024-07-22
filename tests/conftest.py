@@ -187,6 +187,38 @@ def get_utils_b_newspaper_rename() -> str:
 
 
 @pytest.fixture
+def get_test_utils_b_newspaper() -> str:
+    return (
+        "from contextlib import nullcontext as does_not_raise\n\n"
+        "import pytest\n\n"
+        "from tests.mock_package.src import utils_b as ub\n\n"
+        '@pytest.mark.parametrize(\n    "expected_result, expected_context",\n'
+        "    [\n        (1, does_not_raise()),\n    ],\n)\n"
+        "def test_d(expected_result, expected_context):\n"
+        "    with expected_context:\n"
+        "        assert ub.d() == expected_result\n\n\n"
+        '@pytest.mark.parametrize(\n    "expected_context",\n'
+        "    [\n        (does_not_raise()),\n    ],\n)\n"
+        "def test_c(expected_context):\n    with expected_context:\n"
+        "        # This function does not return anything, we just ensure it runs without error\n"
+        "        assert ub.c() is None\n\n\n@pytest.mark.parametrize(\n"
+        '    "expected_context",\n    [\n        (does_not_raise()),\n'
+        "    ],\n)\ndef test_e(expected_context):\n    with expected_context:\n"
+        "        # This function does not return anything, we just ensure it runs without error\n"
+        "        assert ub.e() is None\n\n\n@pytest.mark.parametrize(\n"
+        '    "expected_result, expected_context",\n    [\n'
+        "        (1, does_not_raise()),\n    ],\n)\n"
+        "def test_a(expected_result, expected_context):\n"
+        "    with expected_context:\n        assert ub._a() == expected_result\n\n\n"
+        '@pytest.mark.parametrize(\n    "expected_result, expected_context",\n    [\n'
+        "        (0, does_not_raise()),\n    ],\n)\n"
+        "def test_b(expected_result, expected_context):\n"
+        "    with expected_context:\n"
+        "        assert ub._b() == expected_result\n\n\n"
+    )
+
+
+@pytest.fixture
 def get_utils_c_newspaper_rename() -> str:
     return (
         '"""module level description"""\n\n'

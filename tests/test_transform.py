@@ -115,3 +115,32 @@ def test_sort_src_funcs(
         )
         assert code == expected_code
         assert name_changes == expected_name_changes
+
+
+@pytest.mark.parametrize(
+    "test_path, src_code_fixture_name, call_name_change, expected_result_fixture_name, expected_context",
+    [
+        (
+            get_dir_path(__file__, 0, "mock_package/tests/test_utils_b.py"),
+            "get_utils_b_newspaper_rename",
+            {"a": "_a"},
+            "get_test_utils_b_newspaper",
+            does_not_raise(),
+        )
+    ],
+)
+def test_sort_test_funcs(
+    request,
+    test_path,
+    src_code_fixture_name,
+    call_name_change,
+    expected_result_fixture_name,
+    expected_context,
+):
+    with expected_context:
+        src_code = request.getfixturevalue(src_code_fixture_name)
+        expected_result = request.getfixturevalue(expected_result_fixture_name)
+        assert (
+            tf.sort_test_funcs(test_path, src_code, call_name_change)
+            == expected_result
+        )
