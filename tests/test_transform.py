@@ -1,8 +1,10 @@
+import os
 from contextlib import nullcontext as does_not_raise
 
 import headline.sorters as st
 import headline.transform as tf
 import pytest
+from headline import io
 from headline._logger import get_dir_path
 
 
@@ -151,3 +153,55 @@ def test_sort_test_funcs(
             tf.sort_test_funcs(test_path, src_code, call_name_change)
             == expected_result
         )
+
+
+@pytest.mark.parametrize(
+    "src_path, test_path, inp_sort_type, inp_tests_only, inp_rename, expected_src_result_fixture_name, expected_test_result_fixture_name, expected_context",
+    [
+        (
+            get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
+            get_dir_path(__file__, 0, "mock_package/tests/test_utils_b.py"),
+            "newspaper",
+            False,
+            True,
+            "get_utils_b_newspaper_rename",
+            "get_test_utils_b_newspaper",
+            does_not_raise(),
+        )
+    ],
+)
+def test_sort_src_funcs_and_tests(
+    request,
+    src_path,
+    test_path,
+    inp_sort_type,
+    inp_tests_only,
+    inp_rename,
+    expected_src_result_fixture_name,
+    expected_test_result_fixture_name,
+    expected_context,
+):
+    with expected_context:
+        expected_src_result = request.getfixturevalue(
+            expected_src_result_fixture_name
+        )
+        expected_test_result = request.getfixturevalue(
+            expected_test_result_fixture_name
+        )
+
+        tf.sort_src_funcs_and_tests(
+            src_path, test_path, inp_sort_type, inp_tests_only, inp_rename
+        )
+
+        created_src_path = src_path.replace(".py", f"_{inp_sort_type}.py")
+        created_test_path = test_path.replace(".py", f"_{inp_sort_type}.py")
+
+        actual_src_result = io.get_src_code(created_src_path)
+        actual_test_result = io.get_src_code(created_test_path)
+
+        assert actual_src_result == expected_src_result
+        assert actual_test_result == expected_test_result
+
+        # clean up after myself
+        os.remove(created_src_path)
+        os.remove(created_test_path)
