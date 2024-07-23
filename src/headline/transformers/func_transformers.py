@@ -145,6 +145,32 @@ class FuncTransformer(cst.CSTTransformer):
                 )
         return updated_node
 
+    def leave_ImportAlias(
+        self, original_node: cst.ImportAlias, updated_node: cst.ImportAlias
+    ) -> cst.CSTNode:
+        if isinstance(updated_node.name, cst.Name):
+            func_name = get_normed_test_key(
+                updated_node.name.value, self.is_test_file
+            )
+
+            if self.rename_funcs:
+                name_edit = get_func_name_edit(
+                    func_name,
+                    list(self.func_defs.keys()),
+                    self.private_funcs,
+                )
+                if name_edit:
+                    updated_node = updated_node.with_changes(
+                        name=cst.Name(value=name_edit)
+                    )
+
+            if self.apply_name_changes:
+                name_change = get_name_change(func_name, self.name_changes)
+                updated_node = updated_node.with_changes(
+                    name=cst.Name(value=name_change)
+                )
+        return updated_node
+
     def leave_Arg(
         self, original_node: cst.Arg, updated_node: cst.Arg
     ) -> cst.Arg:
