@@ -23,16 +23,17 @@ The idea is to read functions that are both not called within the module (thus a
 ### called
 `called`: functions that are called the most are at the top moving to those that are called the least. The idea is to get an idea of the core functionality of a module before reading the code where they are used.
 
-
 ### calls
 `calls`: functions that call the most other functions are at the top allowing for efficient reading of the code that "do" the most first.
 
 ### alphabetical
 `alphabetical`: self-explanatory, excludes leading underscores
+
 example: ["a", "_b", "c"]
 
 ### alphabetical_include_leading_underscores
 `alphabetical_include_leading_underscores`: self-explanatory, includes leading underscores
+
 example: ["_b", "a", "c"]
 
 ## Leading underscores
