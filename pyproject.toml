@@ -3,7 +3,7 @@ name = "headline"
 authors = [
     {name="ed cuss"},
 ]
-description = ""
+description = "dynamically reorder functions"
 readme = "docs/README.md"
 requires-python = ">=3.8"
 version = "0.0.1"
