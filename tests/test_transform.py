@@ -121,12 +121,19 @@ def test_sort_src_funcs(
     "test_path, src_code_fixture_name, call_name_change, expected_result_fixture_name, expected_context",
     [
         (
+            get_dir_path(__file__, 0, "mock_package/tests/test_utils_a.py"),
+            "get_utils_a_default",
+            {"add": "_add", "_subtract": "subtract", "multiply": "_multiply"},
+            "get_test_utils_a_default",
+            does_not_raise(),
+        ),
+        (
             get_dir_path(__file__, 0, "mock_package/tests/test_utils_b.py"),
             "get_utils_b_newspaper_rename",
             {"a": "_a"},
             "get_test_utils_b_newspaper",
             does_not_raise(),
-        )
+        ),
     ],
 )
 def test_sort_test_funcs(
