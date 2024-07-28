@@ -1,6 +1,7 @@
 """module level description"""
 
 import re
+from typing import Dict
 
 import pandas as pd
 
@@ -25,7 +26,7 @@ def read_data(filepath: str) -> pd.DataFrame:
     raise FileNotFoundError
 
 
-def check_extension(filepath: str):
+def check_extension(filepath: str) -> bool:
     """this is a docstring
 
     Args:
@@ -34,30 +35,32 @@ def check_extension(filepath: str):
     Returns:
         bool: if the extension is valid
     """
-    return True
+    return bool(filepath)
 
 
 def clean_data(data: pd.DataFrame) -> pd.DataFrame:
     return data
 
 
-def _transform_data(data):
-    def transform():
-        return data
+def _transform_data(data: pd.DataFrame) -> dict:
+    def transform() -> dict:
+        return {"data": data}
 
     return transform()
 
 
-def rename_data(value):
-    def replacer(match):
+def rename_data(value: pd.DataFrame) -> str:
+    def replacer(match) -> str:
         content = match.group(1)
         cleaned_content = " ".join(content.split())
         return f"({cleaned_content})"
 
-    return re.sub(r"\((.*?)\)", replacer, value, flags=re.DOTALL)
+    return re.sub(
+        r"\((.*?)\)", replacer, str(value.iloc[0, 0]), flags=re.DOTALL
+    )
 
 
-def merge_data(data_dict):
+def merge_data(data_dict: Dict) -> pd.DataFrame:
     # this is an inline comment that hopefully will stay
     data = pd.concat([v for v in data_dict.values()])
     return data
@@ -69,5 +72,5 @@ def save_data(data: pd.DataFrame, filepath: str) -> bool:
     return False
 
 
-def filepath_exists(filepath: str):
-    return True
+def filepath_exists(filepath: str) -> bool:
+    return bool(filepath)
