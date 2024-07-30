@@ -190,11 +190,16 @@ def test_sort_src_funcs_and_tests(
         )
 
         tf.sort_src_funcs_and_tests(
-            src_path, test_path, inp_sort_type, inp_tests_only, inp_rename
+            src_path,
+            test_path,
+            inp_sort_type,
+            inp_tests_only,
+            inp_rename,
+            "test",
         )
 
-        created_src_path = src_path.replace(".py", f"_{inp_sort_type}.py")
-        created_test_path = test_path.replace(".py", f"_{inp_sort_type}.py")
+        created_src_path = src_path.replace(".py", "_test.py")
+        created_test_path = test_path.replace(".py", "_test.py")
 
         actual_src_result = io.get_src_code(created_src_path)
         actual_test_result = io.get_src_code(created_test_path)
