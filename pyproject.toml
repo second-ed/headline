@@ -33,6 +33,7 @@ line-length = 79
 force-exclude = "mock_data"
 
 [tool.ruff]
+force-exclude = true
 exclude = ["mock_data"]
 lint.extend-select = ["I", "W"]
 lint.ignore = ["E741"]
