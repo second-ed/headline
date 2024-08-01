@@ -7,12 +7,12 @@ repos:
       language: system
       args: [--exclude=mock_data]
       types_or: [python, jupyter]
-    # - id: ruff
-    #   name: ruff
-    #   entry: ruff check
-    #   language: system
-    #   types_or: [ python, pyi, jupyter ]
-    #   args: [ --fix, --exclude=mock_data]
+    - id: ruff
+      name: ruff
+      entry: ruff check
+      language: system
+      types_or: [ python, pyi, jupyter ]
+      args: [ --fix, --exclude=mock_data]
     - id: pytest-check
       name: pytest-check
       entry: pytest 
