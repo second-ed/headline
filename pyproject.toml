@@ -30,8 +30,10 @@ dev = [
 
 [tool.black]
 line-length = 79
+force-exclude = "mock_data"
 
 [tool.ruff]
+exclude = ["mock_data"]
 lint.extend-select = ["I", "W"]
 lint.ignore = ["E741"]
 line-length = 79

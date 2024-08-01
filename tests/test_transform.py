@@ -16,7 +16,7 @@ from headline._logger import get_dir_path
             st.sort_funcs_alphabetical,
             None,
             False,
-            "get_utils_b_alphabetical_sorted",
+            "get_fixture_utils_b_alphabetical",
             "get_transformer_no_name_changes",
             does_not_raise(),
         ),
@@ -25,7 +25,7 @@ from headline._logger import get_dir_path
             st.sort_funcs_alphabetical_inc_leading_underscores,
             None,
             False,
-            "get_utils_b_alphabetical_inc_leading_underscores_sorted",
+            "get_fixture_utils_b_alphabetical_underscores",
             "get_transformer_no_name_changes",
             does_not_raise(),
         ),
@@ -34,7 +34,7 @@ from headline._logger import get_dir_path
             st.sort_funcs_newspaper,
             None,
             False,
-            "get_utils_b_newspaper_sorted",
+            "get_fixture_utils_b_newspaper",
             "get_transformer_no_name_changes",
             does_not_raise(),
         ),
@@ -43,7 +43,7 @@ from headline._logger import get_dir_path
             st.sort_funcs_calls,
             None,
             False,
-            "get_utils_b_calls_sorted",
+            "get_fixture_utils_b_calls",
             "get_transformer_no_name_changes",
             does_not_raise(),
         ),
@@ -52,7 +52,7 @@ from headline._logger import get_dir_path
             st.sort_funcs_called,
             None,
             False,
-            "get_utils_b_called_sorted",
+            "get_fixture_utils_b_called",
             "get_transformer_no_name_changes",
             does_not_raise(),
         ),
@@ -61,25 +61,16 @@ from headline._logger import get_dir_path
             None,
             ["d", "c", "e", "_b", "a"],
             False,
-            "get_utils_b_manual_sorted",
+            "get_fixture_utils_b_manual",
             "get_transformer_no_name_changes",
             does_not_raise(),
-        ),
-        (
-            get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
-            None,
-            None,
-            False,
-            "get_utils_b_manual_sorted",
-            "get_transformer_no_name_changes",
-            pytest.raises(ValueError),
         ),
         (
             get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
             st.sort_funcs_alphabetical,
             None,
             True,
-            "get_utils_b_alphabetical_rename",
+            "get_fixture_utils_b_alphabetical_rename",
             "get_transformer_utils_b_name_changes",
             does_not_raise(),
         ),
@@ -88,9 +79,18 @@ from headline._logger import get_dir_path
             st.sort_funcs_newspaper,
             None,
             True,
-            "get_utils_c_newspaper_rename",
+            "get_fixture_utils_c_newspaper_rename",
             "get_transformer_utils_c_name_changes",
             does_not_raise(),
+        ),
+        (
+            get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
+            None,
+            None,
+            False,
+            "get_fixture_utils_b_manual",
+            "get_transformer_no_name_changes",
+            pytest.raises(ValueError),
         ),
     ],
 )
@@ -124,16 +124,16 @@ def test_sort_src_funcs(
     [
         (
             get_dir_path(__file__, 0, "mock_package/tests/test_utils_a.py"),
-            "get_utils_a_default",
+            "get_fixture_utils_a_calls_rename",
             {"add": "_add", "_subtract": "subtract", "multiply": "_multiply"},
-            "get_test_utils_a_default",
+            "get_fixture_test_utils_a_calls_rename",
             does_not_raise(),
         ),
         (
             get_dir_path(__file__, 0, "mock_package/tests/test_utils_b.py"),
-            "get_utils_b_newspaper_rename",
+            "get_fixture_utils_b_newspaper_rename",
             {"a": "_a"},
-            "get_test_utils_b_newspaper",
+            "get_fixture_test_utils_b_newspaper_rename",
             does_not_raise(),
         ),
     ],
@@ -164,8 +164,8 @@ def test_sort_test_funcs(
             "newspaper",
             False,
             True,
-            "get_utils_b_newspaper_rename",
-            "get_test_utils_b_newspaper",
+            "get_fixture_utils_b_newspaper_rename",
+            "get_fixture_test_utils_b_newspaper_rename",
             does_not_raise(),
         )
     ],
@@ -204,9 +204,10 @@ def test_sort_src_funcs_and_tests(
         actual_src_result = io.get_src_code(created_src_path)
         actual_test_result = io.get_src_code(created_test_path)
 
-        assert actual_src_result == expected_src_result
-        assert actual_test_result == expected_test_result
-
-        # clean up after myself
-        os.remove(created_src_path)
-        os.remove(created_test_path)
+        try:
+            assert actual_src_result == expected_src_result
+            assert actual_test_result == expected_test_result
+        finally:
+            # clean up after myself
+            os.remove(created_src_path)
+            os.remove(created_test_path)
