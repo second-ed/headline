@@ -167,7 +167,27 @@ def test_sort_test_funcs(
             "get_fixture_utils_b_newspaper_rename",
             "get_fixture_test_utils_b_newspaper_rename",
             does_not_raise(),
-        )
+        ),
+        (
+            get_dir_path(__file__, 1, "mock_data/utils_b_newspaper.py"),
+            get_dir_path(__file__, 0, "mock_package/tests/test_utils_b.py"),
+            "newspaper",
+            True,
+            False,
+            "get_fixture_utils_b_newspaper",
+            "get_fixture_test_utils_b_newspaper",
+            does_not_raise(),
+        ),
+        (
+            get_dir_path(__file__, 1, "mock_data/utils_b_newspaper.py"),
+            get_dir_path(__file__, 0, "mock_package/tests/test_utils_b.py"),
+            "newspaper",
+            True,
+            True,
+            "get_fixture_utils_b_newspaper",
+            "get_fixture_test_utils_b_newspaper",
+            pytest.raises(ValueError),
+        ),
     ],
 )
 def test_sort_src_funcs_and_tests(

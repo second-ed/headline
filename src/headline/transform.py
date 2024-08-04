@@ -115,6 +115,11 @@ def sort_src_funcs_and_tests(
     }
 
     if inp_tests_only:
+        if inp_rename:
+            raise ValueError(
+                "inp_tests_only and inp_rename can't both be true. "
+                f"[inp_tests_only, inp_rename]: [{inp_tests_only}, {inp_rename}]"
+            )
         src_code = io.get_src_code(src_path)
         name_changes = {}
     else:
