@@ -1,4 +1,5 @@
 from collections import defaultdict
+from typing import Optional
 
 import attr
 import libcst as cst
@@ -80,7 +81,7 @@ class FuncVisitor(cst.CSTVisitor):
                 [c for c in self.called_by[f] if c in self.top_level_funcs]
             )
 
-    def _get_full_module_name(self, module):
+    def _get_full_module_name(self, module) -> Optional[str]:
         if isinstance(module, cst.Attribute):
             return (
                 self._get_full_module_name(module.value)
@@ -89,5 +90,4 @@ class FuncVisitor(cst.CSTVisitor):
             )
         elif isinstance(module, cst.Name):
             return module.value
-        else:
-            return None
+        return None
