@@ -231,3 +231,79 @@ def test_sort_src_funcs_and_tests(
             # clean up after myself
             os.remove(created_src_path)
             os.remove(created_test_path)
+
+
+@pytest.mark.parametrize(
+    "initial_src_code_fixture_name, initial_test_code_fixture_name, inp_sort_type, inp_tests_only, inp_rename, expected_src_result_fixture_name, expected_test_result_fixture_name, expected_context",
+    [
+        (
+            "get_fixture_utils_b_alphabetical",
+            "get_fixture_test_utils_b_alphabetical",
+            "newspaper",
+            False,
+            False,
+            "get_fixture_utils_b_newspaper",
+            "get_fixture_test_utils_b_newspaper",
+            does_not_raise(),
+        ),
+    ],
+)
+def test_sort_src_funcs_and_tests_inplace(
+    request,
+    initial_src_code_fixture_name,
+    initial_test_code_fixture_name,
+    inp_sort_type,
+    inp_tests_only,
+    inp_rename,
+    expected_src_result_fixture_name,
+    expected_test_result_fixture_name,
+    expected_context,
+):
+    with expected_context:
+        initial_src_code = request.getfixturevalue(
+            initial_src_code_fixture_name
+        )
+        src_path = get_dir_path(
+            __file__, 1, "mock_data/utils_inplace_placeholder.py"
+        )
+        io.save_modified_code(initial_src_code, src_path)
+
+        initial_test_code = request.getfixturevalue(
+            initial_test_code_fixture_name
+        )
+        test_path = get_dir_path(
+            __file__, 1, "mock_data/test_utils_inplace_placeholder.py"
+        )
+        io.save_modified_code(initial_test_code, test_path)
+
+        expected_src_result = request.getfixturevalue(
+            expected_src_result_fixture_name
+        )
+        expected_test_result = request.getfixturevalue(
+            expected_test_result_fixture_name
+        )
+
+        tf.sort_src_funcs_and_tests(
+            src_path,
+            test_path,
+            inp_sort_type,
+            inp_tests_only,
+            inp_rename,
+        )
+
+        actual_src_result = io.get_src_code(src_path)
+        actual_test_result = io.get_src_code(test_path)
+
+        try:
+            # strip newlines because we care about ordering not formatting, leave that
+            # to ruff
+            assert actual_src_result.strip("\n") == expected_src_result.strip(
+                "\n"
+            )
+            assert actual_test_result.strip(
+                "\n"
+            ) == expected_test_result.strip("\n")
+        finally:
+            # clean up after myself
+            os.remove(src_path)
+            os.remove(test_path)
