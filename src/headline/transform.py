@@ -97,7 +97,7 @@ def sort_test_funcs(
 
 def sort_src_funcs_and_tests(
     src_path: str,
-    test_path: str,
+    test_path: Optional[str],
     inp_sort_type: str,
     inp_tests_only: bool,
     inp_rename: bool,
@@ -127,15 +127,23 @@ def sort_src_funcs_and_tests(
             src_path, sort_types[inp_sort_type], rename_funcs=inp_rename
         )
 
-    test_code = sort_test_funcs(test_path, src_code, name_changes)
+    if test_path:
+        test_code = sort_test_funcs(test_path, src_code, name_changes)
 
     if suffix:
         src_save_path = src_path.replace(".py", f"_{suffix}.py")
-        test_save_path = test_path.replace(".py", f"_{suffix}.py")
+
+        if test_path:
+            test_save_path = test_path.replace(".py", f"_{suffix}.py")
     else:
         src_save_path = src_path
-        test_save_path = test_path
+
+        if test_path:
+            test_save_path = test_path
 
     io.save_modified_code(src_code, src_save_path)
-    io.save_modified_code(test_code, test_save_path)
+
+    if test_path:
+        io.save_modified_code(test_code, test_save_path)
+
     return True

@@ -15,18 +15,25 @@ if is_logging_enabled(__file__):
 logger = logging.getLogger()
 
 
-def main(
-    current_dir: str,
-    inp_sort_type: str,
-    inp_tests_only: bool,
-    inp_rename: bool,
-) -> None:
+def main_process(
+    curr_loc: str,
+    src_dir: str,
+    tests_dir: str,
+    sort_type: str,
+    tests_only: bool,
+    rename: bool,
+    suffix: str,
+):
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
+    paths = get_matching_files(curr_loc, src_dir, tests_dir)
 
-    matching_files = get_matching_files(current_dir)
-
-    for src, tests in matching_files:
+    for src_path, test_path in paths:
         sort_src_funcs_and_tests(
-            src, tests, inp_sort_type, inp_tests_only, inp_rename
+            src_path,
+            test_path,
+            sort_type,
+            tests_only,
+            rename,
+            suffix,
         )
