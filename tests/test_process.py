@@ -3,6 +3,7 @@ import shutil
 
 import headline.io as io
 import headline.process as proc
+import pytest
 from headline._logger import get_dir_path
 
 
@@ -17,87 +18,99 @@ def create_mock_package():
         "mock_data/test_utils_b_newspaper.py": "test_utils_b.py",
     }
 
-    mock_base_path = get_dir_path(__file__, 1)
+    mock_root = get_dir_path(__file__, 1)
     mock_src_path = os.path.join(
-        mock_base_path, "inplace_mock_package/src/mock_package"
+        mock_root, "inplace_mock_package/src/mock_package"
     )
-    mock_tests_path = os.path.join(
-        mock_base_path, "inplace_mock_package/tests"
-    )
+    mock_tests_path = os.path.join(mock_root, "inplace_mock_package/tests")
 
     for path in [mock_src_path, mock_tests_path]:
         os.makedirs(path, exist_ok=True)
         io.save_modified_code("", f"{path}/__init__.py")
 
     for k, v in src_files.items():
-        path = os.path.join(mock_base_path, k)
+        path = os.path.join(mock_root, k)
         code = io.get_src_code(path)
         io.save_modified_code(code, f"{mock_src_path}/{v}")
 
     for k, v in test_files.items():
-        path = os.path.join(mock_base_path, k)
+        path = os.path.join(mock_root, k)
         code = io.get_src_code(path)
         io.save_modified_code(code, f"{mock_tests_path}/{v}")
 
 
-def test_main_process(request):
+@pytest.mark.parametrize(
+    "sort_type, rename",
+    [
+        ("newspaper", "_rename"),
+        ("newspaper", ""),  # empty string = no rename
+        ("calls", "_rename"),
+        ("called", ""),
+        ("alphabetical", "_rename"),
+    ],
+)
+def test_main_process(request, sort_type, rename):
     create_mock_package()
 
+    mock_root = f"{get_dir_path(__file__, 1)}/inplace_mock_package/"
+
     proc.main_process(
-        f"{get_dir_path(__file__, 1)}/inplace_mock_package/",
+        mock_root,
         "src",
         "tests",
-        "newspaper",
+        sort_type,
         False,
-        False,
+        bool(rename),
         "",
     )
 
     actual_utils_a = io.get_src_code(
-        f"{get_dir_path(__file__, 1)}/inplace_mock_package/src/mock_package/utils_a.py"
+        f"{mock_root}src/mock_package/utils_a.py"
     ).strip("\n")
 
     expected_utils_a = request.getfixturevalue(
-        "get_fixture_utils_a_newspaper"
+        f"get_fixture_utils_a_{sort_type}{rename}"
     ).strip("\n")
 
     actual_test_utils_a = io.get_src_code(
-        f"{get_dir_path(__file__, 1)}/inplace_mock_package/tests/test_utils_a.py"
+        f"{mock_root}tests/test_utils_a.py"
     ).strip("\n")
 
     expected_test_utils_a = request.getfixturevalue(
-        "get_fixture_test_utils_a_newspaper"
+        f"get_fixture_test_utils_a_{sort_type}{rename}"
     ).strip("\n")
 
     actual_utils_b = io.get_src_code(
-        f"{get_dir_path(__file__, 1)}/inplace_mock_package/src/mock_package/utils_b.py"
+        f"{mock_root}src/mock_package/utils_b.py"
     ).strip("\n")
 
     expected_utils_b = request.getfixturevalue(
-        "get_fixture_utils_b_newspaper"
+        f"get_fixture_utils_b_{sort_type}{rename}"
     ).strip("\n")
 
     actual_test_utils_b = io.get_src_code(
-        f"{get_dir_path(__file__, 1)}/inplace_mock_package/tests/test_utils_b.py"
+        f"{mock_root}tests/test_utils_b.py"
     ).strip("\n")
 
     expected_test_utils_b = request.getfixturevalue(
-        "get_fixture_test_utils_b_newspaper"
+        f"get_fixture_test_utils_b_{sort_type}{rename}"
     ).strip("\n")
 
     actual_utils_c = io.get_src_code(
-        f"{get_dir_path(__file__, 1)}/inplace_mock_package/src/mock_package/utils_c.py"
+        f"{mock_root}src/mock_package/utils_c.py"
     ).strip("\n")
 
     expected_utils_c = request.getfixturevalue(
-        "get_fixture_utils_c_newspaper"
+        f"get_fixture_utils_c_{sort_type}{rename}"
     ).strip("\n")
 
-    assert actual_utils_a == expected_utils_a
-    assert actual_test_utils_a == expected_test_utils_a
-    assert actual_utils_b == expected_utils_b
-    assert actual_test_utils_b == expected_test_utils_b
-    assert actual_utils_c == expected_utils_c
+    try:
+        assert actual_utils_a == expected_utils_a
+        assert actual_test_utils_a == expected_test_utils_a
+        assert actual_utils_b == expected_utils_b
+        assert actual_test_utils_b == expected_test_utils_b
+        assert actual_utils_c == expected_utils_c
 
-    # cleanup
-    shutil.rmtree(f"{get_dir_path(__file__, 1)}/inplace_mock_package")
+    finally:
+        # cleanup
+        shutil.rmtree(mock_root)
