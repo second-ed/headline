@@ -81,6 +81,10 @@ def test_find_files_in_folders(
                     "some_package/src/utils_b.py",
                     "some_package/tests/test_utils_b.py",
                 ),
+                (
+                    "some_package/src/utils_c.py",
+                    None,
+                ),
             ],
             does_not_raise(),
         ),
@@ -112,6 +116,10 @@ def test_find_matching_files(
                     get_dir_path(
                         __file__, 0, "mock_package/tests/test_utils_b.py"
                     ),
+                ),
+                (
+                    get_dir_path(__file__, 0, "mock_package/src/utils_c.py"),
+                    None,
                 ),
             ],
             does_not_raise(),

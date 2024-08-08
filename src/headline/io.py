@@ -44,16 +44,25 @@ def find_matching_files(
 ) -> List[Tuple[str, str]]:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
-    matching_files = []
+    matching_files, matched = [], []
 
     for f in src_files:
         for f2 in test_files:
             base_f = os.path.basename(f)
             base_f2 = os.path.basename(f2)
-            if base_f == "__init__.py" or base_f2 == "__init__.py":
+            if base_f == "__init__.py":
+                matched.append(f)
+                continue
+            if base_f2 == "__init__.py":
+                matched.append(f2)
                 continue
             if base_f.strip("_") == strip_test_prefix_suffix(base_f2):
                 matching_files.append((f, f2))
+                matched.extend([f, f2])
+
+    for f in src_files + test_files:
+        if f not in matched and f != "__init__.py":
+            matching_files.append((f, None))
 
     return matching_files
 

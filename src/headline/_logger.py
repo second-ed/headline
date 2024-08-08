@@ -34,7 +34,7 @@ def compress_logging_value(item: T) -> Union[T, str]:
     return item
 
 
-def get_dir_path(src: str, idx: int, dst: str) -> str:
+def get_dir_path(src: str, idx: int, dst: str = "") -> str:
     curr_dir = Path(src).parents[idx]
     return str(curr_dir.joinpath(dst)).replace("\\", "/")
 
