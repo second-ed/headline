@@ -53,12 +53,51 @@ def test_main_process(request):
         "",
     )
 
-    assert io.get_src_code(
+    actual_utils_a = io.get_src_code(
         f"{get_dir_path(__file__, 1)}/inplace_mock_package/src/mock_package/utils_a.py"
-    ).strip("\n") == request.getfixturevalue(
-        "get_fixture_utils_a_newspaper"
-    ).strip(
-        "\n"
-    )
+    ).strip("\n")
 
+    expected_utils_a = request.getfixturevalue(
+        "get_fixture_utils_a_newspaper"
+    ).strip("\n")
+
+    actual_test_utils_a = io.get_src_code(
+        f"{get_dir_path(__file__, 1)}/inplace_mock_package/tests/test_utils_a.py"
+    ).strip("\n")
+
+    expected_test_utils_a = request.getfixturevalue(
+        "get_fixture_test_utils_a_newspaper"
+    ).strip("\n")
+
+    actual_utils_b = io.get_src_code(
+        f"{get_dir_path(__file__, 1)}/inplace_mock_package/src/mock_package/utils_b.py"
+    ).strip("\n")
+
+    expected_utils_b = request.getfixturevalue(
+        "get_fixture_utils_b_newspaper"
+    ).strip("\n")
+
+    actual_test_utils_b = io.get_src_code(
+        f"{get_dir_path(__file__, 1)}/inplace_mock_package/tests/test_utils_b.py"
+    ).strip("\n")
+
+    expected_test_utils_b = request.getfixturevalue(
+        "get_fixture_test_utils_b_newspaper"
+    ).strip("\n")
+
+    actual_utils_c = io.get_src_code(
+        f"{get_dir_path(__file__, 1)}/inplace_mock_package/src/mock_package/utils_c.py"
+    ).strip("\n")
+
+    expected_utils_c = request.getfixturevalue(
+        "get_fixture_utils_c_newspaper"
+    ).strip("\n")
+
+    assert actual_utils_a == expected_utils_a
+    assert actual_test_utils_a == expected_test_utils_a
+    assert actual_utils_b == expected_utils_b
+    assert actual_test_utils_b == expected_test_utils_b
+    assert actual_utils_c == expected_utils_c
+
+    # cleanup
     shutil.rmtree(f"{get_dir_path(__file__, 1)}/inplace_mock_package")
