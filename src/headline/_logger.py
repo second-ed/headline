@@ -39,7 +39,7 @@ def get_dir_path(src: str, idx: int, dst: str = "") -> str:
     return str(curr_dir.joinpath(dst)).replace("\\", "/")
 
 
-def is_logging_enabled(src: str):
+def is_logging_enabled() -> bool:
     if os.path.exists(get_dir_path(__file__, 2, "envs/.env")):
         load_dotenv(get_dir_path(__file__, 2, "envs/.env"))
         return os.getenv("ENABLE_LOGGING", "false").lower() == "true"
