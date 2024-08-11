@@ -215,7 +215,7 @@ def test_sort_src_funcs_and_tests(
             inp_sort_type,
             inp_tests_only,
             inp_rename,
-            "test",
+            "_test",
         )
 
         created_src_path = src_path.replace(".py", "_test.py")

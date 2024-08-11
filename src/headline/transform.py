@@ -101,7 +101,7 @@ def sort_src_funcs_and_tests(
     inp_sort_type: str,
     inp_tests_only: bool,
     inp_rename: bool,
-    suffix: Optional[str] = None,
+    suffix: str = "",
 ):
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
@@ -129,17 +129,9 @@ def sort_src_funcs_and_tests(
 
     if test_path:
         test_code = sort_test_funcs(test_path, src_code, name_changes)
+        test_save_path = test_path.replace(".py", f"{suffix}.py")
 
-    if suffix:
-        src_save_path = src_path.replace(".py", f"_{suffix}.py")
-
-        if test_path:
-            test_save_path = test_path.replace(".py", f"_{suffix}.py")
-    else:
-        src_save_path = src_path
-
-        if test_path:
-            test_save_path = test_path
+    src_save_path = src_path.replace(".py", f"{suffix}.py")
 
     io.save_modified_code(src_code, src_save_path)
 
