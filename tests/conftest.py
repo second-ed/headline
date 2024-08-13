@@ -7,6 +7,13 @@ from headline._logger import get_dir_path
 
 
 @pytest.fixture
+def get_fixture_mock_service():
+    return io.get_src_code(
+        get_dir_path(__file__, 1, "mock_data/mock_service.py")
+    )
+
+
+@pytest.fixture
 def get_fixture_test_utils_a_alphabetical():
     return io.get_src_code(
         get_dir_path(__file__, 1, "mock_data/test_utils_a_alphabetical.py")
@@ -534,4 +541,13 @@ def get_test_utils_a_visitor_expected_attrs():
             "test_power",
             "test_subtract",
         ],
+    }
+
+
+@pytest.fixture
+def get_mock_service_visitor_expected_attrs():
+    return {
+        "imports": {"typing": {"name": "List", "as_name": "List"}},
+        "func_def_keys": ["some_random_util_func"],
+        "top_level_funcs": ["some_random_util_func"],
     }

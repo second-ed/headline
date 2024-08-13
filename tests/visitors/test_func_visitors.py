@@ -19,6 +19,11 @@ from headline.visitors.func_visitors import FuncVisitor
             "get_test_utils_a_visitor_expected_attrs",
             does_not_raise(),
         ),
+        (
+            "get_fixture_mock_service",
+            "get_mock_service_visitor_expected_attrs",
+            does_not_raise(),
+        ),
     ],
 )
 def test_func_visitor(request, fixture_name, results_names, expected_context):
@@ -32,5 +37,3 @@ def test_func_visitor(request, fixture_name, results_names, expected_context):
         assert fv.imports == expected_results["imports"]
         assert list(fv.func_defs.keys()) == expected_results["func_def_keys"]
         assert fv.top_level_funcs == expected_results["top_level_funcs"]
-        # assert fv.calls == expected_results["calls"]
-        # assert fv.called_by == expected_results["called_by"]
