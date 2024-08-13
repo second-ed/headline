@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import List
 
 import libcst as cst
@@ -507,6 +508,7 @@ def get_utils_a_visitor_expected_attrs():
             "power",
             "_subtract",
         ],
+        "classes_methods": {},
     }
 
 
@@ -541,6 +543,7 @@ def get_test_utils_a_visitor_expected_attrs():
             "test_power",
             "test_subtract",
         ],
+        "classes_methods": {},
     }
 
 
@@ -548,6 +551,23 @@ def get_test_utils_a_visitor_expected_attrs():
 def get_mock_service_visitor_expected_attrs():
     return {
         "imports": {"typing": {"name": "List", "as_name": "List"}},
-        "func_def_keys": ["some_random_util_func"],
+        "func_def_keys": [
+            "some_random_util_func",
+            "fetch_data",
+            "process_data",
+            "validate_data",
+            "save_data",
+        ],
         "top_level_funcs": ["some_random_util_func"],
+        "classes_methods": defaultdict(
+            list,
+            {
+                "MockService": [
+                    "fetch_data",
+                    "process_data",
+                    "validate_data",
+                    "save_data",
+                ]
+            },
+        ),
     }
