@@ -93,7 +93,6 @@ class FuncVisitor(cst.CSTVisitor):
                 [c for c in self.called_by[f] if c in self.top_level_funcs]
             )
             if func.class_name:
-                print(func.name, func.class_name)
                 self.classes_methods[func.class_name].append(func.name)
 
     def _get_full_module_name(self, module) -> Optional[str]:
