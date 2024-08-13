@@ -25,6 +25,7 @@ class FuncVisitor(cst.CSTVisitor):
     func_defs: dict = attr.ib(default=None)
     is_called: list = attr.ib(default=None)
     depth: int = attr.ib(default=0, validator=[instance_of(int)])  # type: ignore
+    in_class: bool = attr.ib(default=False, validator=[instance_of(bool)])  # type: ignore
     curr_func: str = attr.ib(default="")
     calls: dict = attr.ib(default=None)
     called_by: dict = attr.ib(default=None)
@@ -51,16 +52,23 @@ class FuncVisitor(cst.CSTVisitor):
             self.imports[module] = {"name": name, "as_name": asname}
 
     def visit_FunctionDef(self, node: cst.FunctionDef) -> None:
-        self.curr_func = node.name.value
-        self.func_defs[node.name.value] = FuncDef(
-            node.name.value, node, [], [], self.depth
-        )
+        if not self.in_class:
+            self.curr_func = node.name.value
+            self.func_defs[node.name.value] = FuncDef(
+                node.name.value, node, [], [], self.depth
+            )
 
     def visit_IndentedBlock(self, node: cst.IndentedBlock) -> None:
         self.depth += 1
 
     def leave_IndentedBlock(self, node: cst.IndentedBlock) -> None:
         self.depth -= 1
+
+    def visit_ClassDef(self, node: cst.ClassDef) -> None:
+        self.in_class = True
+
+    def leave_ClassDef(self, node: cst.ClassDef) -> None:
+        self.in_class = False
 
     def visit_Call(self, node: cst.Call) -> None:
         if isinstance(node.func, cst.Name):
