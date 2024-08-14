@@ -30,7 +30,7 @@ class FuncVisitor(cst.CSTVisitor):
     curr_class: str = attr.ib(default="")
     calls: dict = attr.ib(default=None)
     called_by: dict = attr.ib(default=None)
-    classes_methods: dict = attr.ib(default=None)
+    classes_methods: defaultdict = attr.ib(default=None)
     top_level_funcs: list = attr.ib(validator=[instance_of(list)], init=False)
 
     def __attrs_post_init__(self):

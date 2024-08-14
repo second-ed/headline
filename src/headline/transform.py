@@ -46,15 +46,16 @@ def sort_src_funcs(
         raise ValueError("Must have either sorting_func or sorted_funcs")
 
     src_module = _get_src_module(src_path)
-    func_defs = _get_visitor(src_module).func_defs
+    fv = _get_visitor(src_module)
 
     if sorted_funcs is None and isinstance(sorting_func, Callable):
-        sorted_funcs = sorting_func(func_defs.values())
+        sorted_funcs = sorting_func(fv.func_defs.values())
 
     transformer = FuncTransformer(
-        func_defs,
+        fv.func_defs,
         sorted_funcs,  # type: ignore
         rename_funcs=rename_funcs,
+        classes_methods=fv.classes_methods,
     )
     modified_tree = src_module.visit(transformer)
     return modified_tree.code, transformer.name_changes
@@ -76,9 +77,8 @@ def sort_test_funcs(
     }
 
     src_module = cst.parse_module(src_code)
-    func_defs = [
-        f.strip("_") for f in _get_visitor(src_module).top_level_funcs
-    ]
+    fv = _get_visitor(src_module)
+    func_defs = [f.strip("_") for f in fv.top_level_funcs]
     sorted_test_order = [
         f for f in func_defs if f in normed_test_func_defs.keys()
     ]
@@ -89,6 +89,7 @@ def sort_test_funcs(
         rename_funcs=False,
         apply_name_changes=bool(call_name_changes),
         is_test_file=True,
+        classes_methods=fv.classes_methods,
     )
     transformer.name_changes = call_name_changes
     modified_tree = test_module.visit(transformer)

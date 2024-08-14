@@ -1,4 +1,5 @@
 import logging
+from collections import defaultdict
 
 import attr
 import libcst as cst
@@ -18,8 +19,12 @@ logger = logging.getLogger()
 class FuncTransformer(cst.CSTTransformer):
     func_defs: dict = attr.ib(validator=[instance_of(dict)])
     sorted_func_names: list = attr.ib(validator=[instance_of(list)])
+    classes_methods: defaultdict = attr.ib(
+        validator=[instance_of(defaultdict)]
+    )
     private_funcs: list = attr.ib(validator=[instance_of(list)], init=False)
     name_changes: dict = attr.ib(validator=[instance_of(dict)], init=False)
+    curr_class: str = attr.ib(default="", validator=[instance_of(str)])  # type: ignore
     rename_funcs: bool = attr.ib(default=True, validator=[instance_of(bool)])  # type: ignore
     apply_name_changes: bool = attr.ib(default=False, validator=[instance_of(bool)])  # type: ignore
     is_test_file: bool = attr.ib(default=False, validator=[instance_of(bool)])  # type: ignore
@@ -29,7 +34,7 @@ class FuncTransformer(cst.CSTTransformer):
         self.private_funcs = [
             f.name
             for f in self.func_defs.values()
-            if (f.indent > 0) or (len(f.called) > 0)
+            if ((f.indent > 0) or (len(f.called) > 0)) and not f.class_name
         ]
         self.name_changes = {}
 
@@ -194,3 +199,9 @@ class FuncTransformer(cst.CSTTransformer):
                     value=cst.Name(value=name_change)
                 )
         return updated_node
+
+    def visit_ClassDef(self, node: cst.ClassDef) -> None:
+        self.curr_class = node.name.value
+
+    def leave_ClassDef(self, node: cst.ClassDef) -> None:
+        self.curr_class = ""
