@@ -5,7 +5,7 @@ from headline.process import main_process
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("curr_loc", type=str)
+    parser.add_argument("cwd", type=str)
     parser.add_argument("src_dir", nargs="?", type=str, default="src")
     parser.add_argument("tests_dir", nargs="?", type=str, default="tests")
     parser.add_argument("sort_type", nargs="?", type=str, default="newspaper")
@@ -16,7 +16,7 @@ def main():
     args = parser.parse_args()
 
     main_process(
-        args.curr_loc,
+        args.cwd,
         args.src_dir,
         args.tests_dir,
         args.sort_type,

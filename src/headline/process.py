@@ -16,7 +16,7 @@ logger = logging.getLogger()
 
 
 def main_process(
-    curr_loc: str,
+    cwd: str,
     src_dir: str,
     tests_dir: str,
     sort_type: str,
@@ -26,7 +26,7 @@ def main_process(
 ):
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
-    paths = get_matching_files(curr_loc, src_dir, tests_dir)
+    paths = get_matching_files(cwd, src_dir, tests_dir)
 
     for src_path, test_path in paths:
         sort_src_funcs_and_tests(
