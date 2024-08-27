@@ -75,7 +75,7 @@ def get_leading_lines(def_code: cst.FunctionDef, idx: int) -> list:
     return [] + get_leading_comments(def_code)
 
 
-def get_leading_comments(def_code) -> list:
+def get_leading_comments(def_code: cst.FunctionDef) -> list:
     return [l for l in def_code.leading_lines if l.comment]
 
 
