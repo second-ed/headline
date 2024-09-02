@@ -57,3 +57,9 @@ class MockService:
             bool: True if the data was saved successfully, False otherwise.
         """
         return True
+    
+    def run(self):
+        data = self.fetch_data("something")
+        if self.validate_data(data):
+            processed_data = self.process_data(data)
+            self.save_data(processed_data)

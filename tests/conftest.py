@@ -567,6 +567,7 @@ def get_mock_service_visitor_expected_attrs():
                     "process_data",
                     "validate_data",
                     "save_data",
+                    "run",
                 ]
             },
         ),
