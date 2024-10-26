@@ -14,6 +14,19 @@ from ._logger import compress_logging_value
 logger = logging.getLogger()
 
 
+def get_sort_type(inp_sort_type: str) -> Callable:
+    sort_types = {
+        "newspaper": srt.sort_funcs_newspaper,
+        "called": srt.sort_funcs_called,
+        "calls": srt.sort_funcs_calls,
+        "alphabetical": srt.sort_funcs_alphabetical,
+        "alphabetical_include_leading_underscores": srt.sort_funcs_alphabetical_inc_leading_underscores,
+    }
+    if inp_sort_type in sort_types:
+        return sort_types[inp_sort_type]
+    raise KeyError(f"sort type {inp_sort_type} is not implemented")
+
+
 def _get_src_module(src_path: str) -> cst.Module:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
@@ -107,14 +120,6 @@ def sort_src_funcs_and_tests(
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
 
-    sort_types = {
-        "newspaper": srt.sort_funcs_newspaper,
-        "called": srt.sort_funcs_called,
-        "calls": srt.sort_funcs_calls,
-        "alphabetical": srt.sort_funcs_alphabetical,
-        "alphabetical_include_leading_underscores": srt.sort_funcs_alphabetical_inc_leading_underscores,
-    }
-
     if inp_tests_only:
         if inp_rename:
             raise ValueError(
@@ -125,7 +130,7 @@ def sort_src_funcs_and_tests(
         name_changes = {}
     else:
         src_code, name_changes = sort_src_funcs(
-            src_path, sort_types[inp_sort_type], rename_funcs=inp_rename
+            src_path, get_sort_type(inp_sort_type), rename_funcs=inp_rename
         )
 
     if test_path:

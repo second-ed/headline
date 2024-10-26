@@ -1,7 +1,7 @@
 import os
 from contextlib import nullcontext as does_not_raise
 
-import headline.sorters as st
+import headline.sorters as srt
 import headline.transform as tf
 import pytest
 from headline import io
@@ -9,11 +9,27 @@ from headline._logger import get_dir_path
 
 
 @pytest.mark.parametrize(
+    "inp_sort_type, expected_result, expected_context",
+    [
+        ("newspaper", srt.sort_funcs_newspaper, does_not_raise()),
+        ("called", srt.sort_funcs_called, does_not_raise()),
+        ("calls", srt.sort_funcs_calls, does_not_raise()),
+        ("alphabetical", srt.sort_funcs_alphabetical, does_not_raise()),
+        ("alphabetical_include_leading_underscores", srt.sort_funcs_alphabetical_inc_leading_underscores, does_not_raise()),
+        ("fail", None, pytest.raises(KeyError))
+    ]
+)
+def test_get_sort_type(inp_sort_type, expected_result, expected_context):
+    with expected_context:
+        assert tf.get_sort_type(inp_sort_type) == expected_result
+
+
+@pytest.mark.parametrize(
     "src_path, sorting_func, sorted_funcs, rename_funcs, expected_result_fixture_name, expected_name_changes_fixture_name, expected_context",
     [
         (
             get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
-            st.sort_funcs_alphabetical,
+            srt.sort_funcs_alphabetical,
             None,
             False,
             "get_fixture_utils_b_alphabetical",
@@ -22,7 +38,7 @@ from headline._logger import get_dir_path
         ),
         (
             get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
-            st.sort_funcs_alphabetical_inc_leading_underscores,
+            srt.sort_funcs_alphabetical_inc_leading_underscores,
             None,
             False,
             "get_fixture_utils_b_alphabetical_underscores",
@@ -31,7 +47,7 @@ from headline._logger import get_dir_path
         ),
         (
             get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
-            st.sort_funcs_newspaper,
+            srt.sort_funcs_newspaper,
             None,
             False,
             "get_fixture_utils_b_newspaper",
@@ -40,7 +56,7 @@ from headline._logger import get_dir_path
         ),
         (
             get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
-            st.sort_funcs_calls,
+            srt.sort_funcs_calls,
             None,
             False,
             "get_fixture_utils_b_calls",
@@ -49,7 +65,7 @@ from headline._logger import get_dir_path
         ),
         (
             get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
-            st.sort_funcs_called,
+            srt.sort_funcs_called,
             None,
             False,
             "get_fixture_utils_b_called",
@@ -67,7 +83,7 @@ from headline._logger import get_dir_path
         ),
         (
             get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
-            st.sort_funcs_alphabetical,
+            srt.sort_funcs_alphabetical,
             None,
             True,
             "get_fixture_utils_b_alphabetical_rename",
@@ -76,7 +92,7 @@ from headline._logger import get_dir_path
         ),
         (
             get_dir_path(__file__, 0, "mock_package/src/utils_c.py"),
-            st.sort_funcs_newspaper,
+            srt.sort_funcs_newspaper,
             None,
             True,
             "get_fixture_utils_c_newspaper_rename",
