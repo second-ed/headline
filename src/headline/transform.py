@@ -27,7 +27,7 @@ def get_sort_type(inp_sort_type: str) -> Callable:
     raise KeyError(f"sort type {inp_sort_type} is not implemented")
 
 
-def _get_src_module(src_path: str) -> cst.Module:
+def _get_module_tree(src_path: str) -> cst.Module:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
 
@@ -58,7 +58,7 @@ def sort_src_funcs(
     if all([sorting_func is None, sorted_funcs is None]):
         raise ValueError("Must have either sorting_func or sorted_funcs")
 
-    src_module = _get_src_module(src_path)
+    src_module = _get_module_tree(src_path)
     fv = _get_visitor(src_module)
 
     if sorted_funcs is None and isinstance(sorting_func, Callable):
@@ -82,7 +82,7 @@ def sort_test_funcs(
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
 
-    test_module = _get_src_module(test_path)
+    test_module = _get_module_tree(test_path)
     test_func_defs = _get_visitor(test_module).func_defs
 
     normed_test_func_defs = {
