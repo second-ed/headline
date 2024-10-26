@@ -128,12 +128,9 @@ def sort_src_funcs_and_tests(
         test_tree = cst.parse_module(test_code)
         test_tree = sort_test_funcs(test_tree, src_tree, name_changes)
         test_save_path = test_path.replace(".py", f"{suffix}.py")
+        io.save_modified_code(test_tree.code, test_save_path)
 
     src_save_path = src_path.replace(".py", f"{suffix}.py")
-
     io.save_modified_code(src_tree.code, src_save_path)
-
-    if test_path:
-        io.save_modified_code(test_tree.code, test_save_path)
 
     return True

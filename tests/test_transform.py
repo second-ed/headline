@@ -137,7 +137,7 @@ def test_sort_src_funcs(
             sorted_funcs=sorted_funcs,
             rename_funcs=rename_funcs,
         )
-        assert tree.code == expected_code
+        assert format_code_str(tree.code) == expected_code
         assert name_changes == expected_name_changes
 
 
@@ -175,7 +175,9 @@ def test_sort_test_funcs(
         test_tree = cst.parse_module(io.get_src_code(test_path))
         expected_result = request.getfixturevalue(expected_result_fixture_name)
         assert (
-            tf.sort_test_funcs(test_tree, src_tree, call_name_change).code
+            format_code_str(
+                tf.sort_test_funcs(test_tree, src_tree, call_name_change).code
+            )
             == expected_result
         )
 
@@ -250,12 +252,8 @@ def test_sort_src_funcs_and_tests(
         actual_test_result = io.get_src_code(created_test_path)
 
         try:
-            assert format_code_str(actual_src_result) == format_code_str(
-                expected_src_result
-            )
-            assert format_code_str(actual_test_result) == format_code_str(
-                expected_test_result
-            )
+            assert format_code_str(actual_src_result) == expected_src_result
+            assert format_code_str(actual_test_result) == expected_test_result
         finally:
             # clean up after myself
             os.remove(created_src_path)
