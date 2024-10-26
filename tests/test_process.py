@@ -5,6 +5,7 @@ import headline.io as io
 import headline.process as proc
 import pytest
 from headline._logger import get_dir_path
+from headline.utils import format_code_str
 
 
 def create_mock_package():
@@ -64,52 +65,51 @@ def test_main_process(request, sort_type, rename):
         "",
     )
 
-    actual_utils_a = io.get_src_code(
-        f"{mock_root}src/mock_package/utils_a.py"
-    ).strip("\n")
+    actual_utils_a = io.get_src_code(f"{mock_root}src/mock_package/utils_a.py")
 
     expected_utils_a = request.getfixturevalue(
         f"get_fixture_utils_a_{sort_type}{rename}"
-    ).strip("\n")
+    )
 
-    actual_test_utils_a = io.get_src_code(
-        f"{mock_root}tests/test_utils_a.py"
-    ).strip("\n")
+    actual_test_utils_a = io.get_src_code(f"{mock_root}tests/test_utils_a.py")
 
     expected_test_utils_a = request.getfixturevalue(
         f"get_fixture_test_utils_a_{sort_type}{rename}"
-    ).strip("\n")
+    )
 
-    actual_utils_b = io.get_src_code(
-        f"{mock_root}src/mock_package/utils_b.py"
-    ).strip("\n")
+    actual_utils_b = io.get_src_code(f"{mock_root}src/mock_package/utils_b.py")
 
     expected_utils_b = request.getfixturevalue(
         f"get_fixture_utils_b_{sort_type}{rename}"
-    ).strip("\n")
-
-    actual_test_utils_b = io.get_src_code(
-        f"{mock_root}tests/test_utils_b.py"
-    ).strip("\n")
+    )
+    actual_test_utils_b = io.get_src_code(f"{mock_root}tests/test_utils_b.py")
 
     expected_test_utils_b = request.getfixturevalue(
         f"get_fixture_test_utils_b_{sort_type}{rename}"
-    ).strip("\n")
+    )
 
-    actual_utils_c = io.get_src_code(
-        f"{mock_root}src/mock_package/utils_c.py"
-    ).strip("\n")
+    actual_utils_c = io.get_src_code(f"{mock_root}src/mock_package/utils_c.py")
 
     expected_utils_c = request.getfixturevalue(
         f"get_fixture_utils_c_{sort_type}{rename}"
-    ).strip("\n")
+    )
 
     try:
-        assert actual_utils_a == expected_utils_a
-        assert actual_test_utils_a == expected_test_utils_a
-        assert actual_utils_b == expected_utils_b
-        assert actual_test_utils_b == expected_test_utils_b
-        assert actual_utils_c == expected_utils_c
+        assert format_code_str(actual_utils_a) == format_code_str(
+            expected_utils_a
+        )
+        assert format_code_str(actual_test_utils_a) == format_code_str(
+            expected_test_utils_a
+        )
+        assert format_code_str(actual_utils_b) == format_code_str(
+            expected_utils_b
+        )
+        assert format_code_str(actual_test_utils_b) == format_code_str(
+            expected_test_utils_b
+        )
+        assert format_code_str(actual_utils_c) == format_code_str(
+            expected_utils_c
+        )
 
     finally:
         # cleanup

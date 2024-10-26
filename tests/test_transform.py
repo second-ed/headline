@@ -7,6 +7,7 @@ import libcst as cst
 import pytest
 from headline import io
 from headline._logger import get_dir_path
+from headline.utils import format_code_str
 
 
 @pytest.mark.parametrize(
@@ -249,8 +250,12 @@ def test_sort_src_funcs_and_tests(
         actual_test_result = io.get_src_code(created_test_path)
 
         try:
-            assert actual_src_result == expected_src_result
-            assert actual_test_result == expected_test_result
+            assert format_code_str(actual_src_result) == format_code_str(
+                expected_src_result
+            )
+            assert format_code_str(actual_test_result) == format_code_str(
+                expected_test_result
+            )
         finally:
             # clean up after myself
             os.remove(created_src_path)
