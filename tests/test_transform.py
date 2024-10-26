@@ -15,9 +15,13 @@ from headline._logger import get_dir_path
         ("called", srt.sort_funcs_called, does_not_raise()),
         ("calls", srt.sort_funcs_calls, does_not_raise()),
         ("alphabetical", srt.sort_funcs_alphabetical, does_not_raise()),
-        ("alphabetical_include_leading_underscores", srt.sort_funcs_alphabetical_inc_leading_underscores, does_not_raise()),
-        ("fail", None, pytest.raises(KeyError))
-    ]
+        (
+            "alphabetical_include_leading_underscores",
+            srt.sort_funcs_alphabetical_inc_leading_underscores,
+            does_not_raise(),
+        ),
+        ("fail", None, pytest.raises(KeyError)),
+    ],
 )
 def test_get_sort_type(inp_sort_type, expected_result, expected_context):
     with expected_context:

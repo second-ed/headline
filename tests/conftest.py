@@ -557,6 +557,7 @@ def get_mock_service_visitor_expected_attrs():
             "process_data",
             "validate_data",
             "save_data",
+            "run",
         ],
         "top_level_funcs": ["some_random_util_func"],
         "classes_methods": defaultdict(
