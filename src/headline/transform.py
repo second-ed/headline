@@ -14,27 +14,43 @@ from ._logger import compress_logging_value
 logger = logging.getLogger()
 
 
-def get_sort_type(inp_sort_type: str) -> Callable:
-    sort_types = {
-        "newspaper": srt.sort_funcs_newspaper,
-        "called": srt.sort_funcs_called,
-        "calls": srt.sort_funcs_calls,
-        "alphabetical": srt.sort_funcs_alphabetical,
-        "alphabetical_include_leading_underscores": srt.sort_funcs_alphabetical_inc_leading_underscores,
-    }
-    if inp_sort_type in sort_types:
-        return sort_types[inp_sort_type]
-    raise KeyError(f"sort type {inp_sort_type} is not implemented")
-
-
-def _get_visitor(src_module: cst.Module) -> FuncVisitor:
+def sort_src_funcs_and_tests(
+    src_path: str,
+    test_path: Optional[str],
+    inp_sort_type: str,
+    inp_tests_only: bool,
+    inp_rename: bool,
+    suffix: str = "",
+):
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
 
-    src_visitor = FuncVisitor()
-    src_module.visit(src_visitor)
-    src_visitor.process_func_defs()
-    return src_visitor
+    src_code = io.get_src_code(src_path)
+    src_tree: cst.Module = cst.parse_module(src_code)
+
+    if inp_tests_only:
+        if inp_rename:
+            raise ValueError(
+                "inp_tests_only and inp_rename can't both be true. "
+                f"[inp_tests_only, inp_rename]: [{inp_tests_only}, {inp_rename}]"
+            )
+        name_changes = {}
+    else:
+        src_tree, name_changes = sort_src_funcs(
+            src_tree, get_sort_type(inp_sort_type), rename_funcs=inp_rename
+        )
+
+    if test_path:
+        test_code = io.get_src_code(test_path)
+        test_tree = cst.parse_module(test_code)
+        test_tree = sort_test_funcs(test_tree, src_tree, name_changes)
+        test_save_path = test_path.replace(".py", f"{suffix}.py")
+        io.save_modified_code(test_tree.code, test_save_path)
+
+    src_save_path = src_path.replace(".py", f"{suffix}.py")
+    io.save_modified_code(src_tree.code, src_save_path)
+
+    return True
 
 
 def sort_src_funcs(
@@ -97,40 +113,24 @@ def sort_test_funcs(
     return modified_tree
 
 
-def sort_src_funcs_and_tests(
-    src_path: str,
-    test_path: Optional[str],
-    inp_sort_type: str,
-    inp_tests_only: bool,
-    inp_rename: bool,
-    suffix: str = "",
-):
+def get_sort_type(inp_sort_type: str) -> Callable:
+    sort_types = {
+        "newspaper": srt.sort_funcs_newspaper,
+        "called": srt.sort_funcs_called,
+        "calls": srt.sort_funcs_calls,
+        "alphabetical": srt.sort_funcs_alphabetical,
+        "alphabetical_include_leading_underscores": srt.sort_funcs_alphabetical_inc_leading_underscores,
+    }
+    if inp_sort_type in sort_types:
+        return sort_types[inp_sort_type]
+    raise KeyError(f"sort type {inp_sort_type} is not implemented")
+
+
+def _get_visitor(src_module: cst.Module) -> FuncVisitor:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
 
-    src_code = io.get_src_code(src_path)
-    src_tree: cst.Module = cst.parse_module(src_code)
-
-    if inp_tests_only:
-        if inp_rename:
-            raise ValueError(
-                "inp_tests_only and inp_rename can't both be true. "
-                f"[inp_tests_only, inp_rename]: [{inp_tests_only}, {inp_rename}]"
-            )
-        name_changes = {}
-    else:
-        src_tree, name_changes = sort_src_funcs(
-            src_tree, get_sort_type(inp_sort_type), rename_funcs=inp_rename
-        )
-
-    if test_path:
-        test_code = io.get_src_code(test_path)
-        test_tree = cst.parse_module(test_code)
-        test_tree = sort_test_funcs(test_tree, src_tree, name_changes)
-        test_save_path = test_path.replace(".py", f"{suffix}.py")
-        io.save_modified_code(test_tree.code, test_save_path)
-
-    src_save_path = src_path.replace(".py", f"{suffix}.py")
-    io.save_modified_code(src_tree.code, src_save_path)
-
-    return True
+    src_visitor = FuncVisitor()
+    src_module.visit(src_visitor)
+    src_visitor.process_func_defs()
+    return src_visitor

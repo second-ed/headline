@@ -3,7 +3,7 @@ import argparse
 from headline.process import main_process
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("cwd", type=str)
     parser.add_argument("src_dir", nargs="?", type=str, default="src")
