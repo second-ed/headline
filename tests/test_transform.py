@@ -3,6 +3,7 @@ from contextlib import nullcontext as does_not_raise
 
 import headline.sorters as srt
 import headline.transform as tf
+import libcst as cst
 import pytest
 from headline import io
 from headline._logger import get_dir_path
@@ -129,13 +130,13 @@ def test_sort_src_funcs(
         expected_name_changes = request.getfixturevalue(
             expected_name_changes_fixture_name
         )
-        code, name_changes = tf.sort_src_funcs(
-            src_path,
+        tree, name_changes = tf.sort_src_funcs(
+            cst.parse_module(io.get_src_code(src_path)),
             sorting_func=sorting_func,
             sorted_funcs=sorted_funcs,
             rename_funcs=rename_funcs,
         )
-        assert code == expected_code
+        assert tree.code == expected_code
         assert name_changes == expected_name_changes
 
 
@@ -167,10 +168,13 @@ def test_sort_test_funcs(
     expected_context,
 ):
     with expected_context:
-        src_code = request.getfixturevalue(src_code_fixture_name)
+        src_tree = cst.parse_module(
+            request.getfixturevalue(src_code_fixture_name)
+        )
+        test_tree = cst.parse_module(io.get_src_code(test_path))
         expected_result = request.getfixturevalue(expected_result_fixture_name)
         assert (
-            tf.sort_test_funcs(test_path, src_code, call_name_change)
+            tf.sort_test_funcs(test_tree, src_tree, call_name_change).code
             == expected_result
         )
 
