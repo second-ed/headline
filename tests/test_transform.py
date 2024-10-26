@@ -257,4 +257,4 @@ def test_sort_test_funcs(
 )
 def test_get_sort_type(inp_sort_type, expected_result, expected_context):
     with expected_context:
-        assert tf.get_sort_type(inp_sort_type) == expected_result
+        assert tf._get_sort_type(inp_sort_type) == expected_result

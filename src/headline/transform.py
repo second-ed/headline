@@ -37,7 +37,7 @@ def sort_src_funcs_and_tests(
         name_changes = {}
     else:
         src_tree, name_changes = sort_src_funcs(
-            src_tree, get_sort_type(inp_sort_type), rename_funcs=inp_rename
+            src_tree, _get_sort_type(inp_sort_type), rename_funcs=inp_rename
         )
 
     if test_path:
@@ -113,7 +113,7 @@ def sort_test_funcs(
     return modified_tree
 
 
-def get_sort_type(inp_sort_type: str) -> Callable:
+def _get_sort_type(inp_sort_type: str) -> Callable:
     sort_types = {
         "newspaper": srt.sort_funcs_newspaper,
         "called": srt.sort_funcs_called,
