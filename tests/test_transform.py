@@ -11,23 +11,81 @@ from headline.utils import format_code_str
 
 
 @pytest.mark.parametrize(
-    "inp_sort_type, expected_result, expected_context",
+    "src_path, test_path, inp_sort_type, inp_tests_only, inp_rename, expected_src_result_fixture_name, expected_test_result_fixture_name, expected_context",
     [
-        ("newspaper", srt.sort_funcs_newspaper, does_not_raise()),
-        ("called", srt.sort_funcs_called, does_not_raise()),
-        ("calls", srt.sort_funcs_calls, does_not_raise()),
-        ("alphabetical", srt.sort_funcs_alphabetical, does_not_raise()),
         (
-            "alphabetical_include_leading_underscores",
-            srt.sort_funcs_alphabetical_inc_leading_underscores,
+            get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
+            get_dir_path(__file__, 0, "mock_package/tests/test_utils_b.py"),
+            "newspaper",
+            False,
+            True,
+            "get_fixture_utils_b_newspaper_rename",
+            "get_fixture_test_utils_b_newspaper_rename",
             does_not_raise(),
         ),
-        ("fail", None, pytest.raises(KeyError)),
+        (
+            get_dir_path(__file__, 1, "mock_data/utils_b_newspaper.py"),
+            get_dir_path(__file__, 0, "mock_package/tests/test_utils_b.py"),
+            "newspaper",
+            True,
+            False,
+            "get_fixture_utils_b_newspaper",
+            "get_fixture_test_utils_b_newspaper",
+            does_not_raise(),
+        ),
+        (
+            get_dir_path(__file__, 1, "mock_data/utils_b_newspaper.py"),
+            get_dir_path(__file__, 0, "mock_package/tests/test_utils_b.py"),
+            "newspaper",
+            True,
+            True,
+            "get_fixture_utils_b_newspaper",
+            "get_fixture_test_utils_b_newspaper",
+            pytest.raises(ValueError),
+        ),
     ],
 )
-def test_get_sort_type(inp_sort_type, expected_result, expected_context):
+def test_sort_src_funcs_and_tests(
+    request,
+    src_path,
+    test_path,
+    inp_sort_type,
+    inp_tests_only,
+    inp_rename,
+    expected_src_result_fixture_name,
+    expected_test_result_fixture_name,
+    expected_context,
+):
     with expected_context:
-        assert tf.get_sort_type(inp_sort_type) == expected_result
+        expected_src_result = request.getfixturevalue(
+            expected_src_result_fixture_name
+        )
+        expected_test_result = request.getfixturevalue(
+            expected_test_result_fixture_name
+        )
+
+        tf.sort_src_funcs_and_tests(
+            src_path,
+            test_path,
+            inp_sort_type,
+            inp_tests_only,
+            inp_rename,
+            "_test",
+        )
+
+        created_src_path = src_path.replace(".py", "_test.py")
+        created_test_path = test_path.replace(".py", "_test.py")
+
+        actual_src_result = io.get_src_code(created_src_path)
+        actual_test_result = io.get_src_code(created_test_path)
+
+        try:
+            assert format_code_str(actual_src_result) == expected_src_result
+            assert format_code_str(actual_test_result) == expected_test_result
+        finally:
+            # clean up after myself
+            os.remove(created_src_path)
+            os.remove(created_test_path)
 
 
 @pytest.mark.parametrize(
@@ -183,78 +241,20 @@ def test_sort_test_funcs(
 
 
 @pytest.mark.parametrize(
-    "src_path, test_path, inp_sort_type, inp_tests_only, inp_rename, expected_src_result_fixture_name, expected_test_result_fixture_name, expected_context",
+    "inp_sort_type, expected_result, expected_context",
     [
+        ("newspaper", srt.sort_funcs_newspaper, does_not_raise()),
+        ("called", srt.sort_funcs_called, does_not_raise()),
+        ("calls", srt.sort_funcs_calls, does_not_raise()),
+        ("alphabetical", srt.sort_funcs_alphabetical, does_not_raise()),
         (
-            get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
-            get_dir_path(__file__, 0, "mock_package/tests/test_utils_b.py"),
-            "newspaper",
-            False,
-            True,
-            "get_fixture_utils_b_newspaper_rename",
-            "get_fixture_test_utils_b_newspaper_rename",
+            "alphabetical_include_leading_underscores",
+            srt.sort_funcs_alphabetical_inc_leading_underscores,
             does_not_raise(),
         ),
-        (
-            get_dir_path(__file__, 1, "mock_data/utils_b_newspaper.py"),
-            get_dir_path(__file__, 0, "mock_package/tests/test_utils_b.py"),
-            "newspaper",
-            True,
-            False,
-            "get_fixture_utils_b_newspaper",
-            "get_fixture_test_utils_b_newspaper",
-            does_not_raise(),
-        ),
-        (
-            get_dir_path(__file__, 1, "mock_data/utils_b_newspaper.py"),
-            get_dir_path(__file__, 0, "mock_package/tests/test_utils_b.py"),
-            "newspaper",
-            True,
-            True,
-            "get_fixture_utils_b_newspaper",
-            "get_fixture_test_utils_b_newspaper",
-            pytest.raises(ValueError),
-        ),
+        ("fail", None, pytest.raises(KeyError)),
     ],
 )
-def test_sort_src_funcs_and_tests(
-    request,
-    src_path,
-    test_path,
-    inp_sort_type,
-    inp_tests_only,
-    inp_rename,
-    expected_src_result_fixture_name,
-    expected_test_result_fixture_name,
-    expected_context,
-):
+def test_get_sort_type(inp_sort_type, expected_result, expected_context):
     with expected_context:
-        expected_src_result = request.getfixturevalue(
-            expected_src_result_fixture_name
-        )
-        expected_test_result = request.getfixturevalue(
-            expected_test_result_fixture_name
-        )
-
-        tf.sort_src_funcs_and_tests(
-            src_path,
-            test_path,
-            inp_sort_type,
-            inp_tests_only,
-            inp_rename,
-            "_test",
-        )
-
-        created_src_path = src_path.replace(".py", "_test.py")
-        created_test_path = test_path.replace(".py", "_test.py")
-
-        actual_src_result = io.get_src_code(created_src_path)
-        actual_test_result = io.get_src_code(created_test_path)
-
-        try:
-            assert format_code_str(actual_src_result) == expected_src_result
-            assert format_code_str(actual_test_result) == expected_test_result
-        finally:
-            # clean up after myself
-            os.remove(created_src_path)
-            os.remove(created_test_path)
+        assert tf.get_sort_type(inp_sort_type) == expected_result
