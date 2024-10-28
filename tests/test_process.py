@@ -95,21 +95,11 @@ def test_main_process(request, sort_type, rename):
     )
 
     try:
-        assert format_code_str(actual_utils_a) == format_code_str(
-            expected_utils_a
-        )
-        assert format_code_str(actual_test_utils_a) == format_code_str(
-            expected_test_utils_a
-        )
-        assert format_code_str(actual_utils_b) == format_code_str(
-            expected_utils_b
-        )
-        assert format_code_str(actual_test_utils_b) == format_code_str(
-            expected_test_utils_b
-        )
-        assert format_code_str(actual_utils_c) == format_code_str(
-            expected_utils_c
-        )
+        assert format_code_str(actual_utils_a) == expected_utils_a
+        assert format_code_str(actual_test_utils_a) == expected_test_utils_a
+        assert format_code_str(actual_utils_b) == expected_utils_b
+        assert format_code_str(actual_test_utils_b) == expected_test_utils_b
+        assert format_code_str(actual_utils_c) == expected_utils_c
 
     finally:
         # cleanup
