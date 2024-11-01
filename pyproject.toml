@@ -3,13 +3,16 @@ name = "headline"
 authors = [
     {name="ed cuss"},
 ]
-description = ""
-readme = "README.md"
+description = "dynamically reorder functions"
+readme = "docs/README.md"
 requires-python = ">=3.8"
 version = "0.0.1"
 dependencies = [
     "attrs",
+    "black>=24",
+    "isort",
     "libcst",
+    "python-dotenv >= 0.20.0",
 ]
 
 [project.optional-dependencies]
@@ -20,7 +23,6 @@ test = [
 ]
 lint = [
     "pre-commit",
-    "black>=24",
     "ruff>=0.4.2",
 ]
 dev = [
@@ -29,8 +31,32 @@ dev = [
 
 [tool.black]
 line-length = 79
+force-exclude = "mock_data"
 
 [tool.ruff]
+force-exclude = true
+exclude = ["mock_data"]
 lint.extend-select = ["I", "W"]
 lint.ignore = ["E741"]
 line-length = 79
+
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+]
+
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+omit = [
+    "*__init__.py",
+    "*config.py",
+    "*_logger.py",
+    "*main.py", 
+]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 80

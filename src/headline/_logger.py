@@ -2,6 +2,12 @@ import logging
 import logging.config
 import os
 from pathlib import Path
+from typing import Sequence, TypeVar, Union
+
+import libcst as cst
+from dotenv import load_dotenv
+
+T = TypeVar("T")
 
 
 def setup_logger(file, idx) -> bool:
@@ -14,6 +20,27 @@ def setup_logger(file, idx) -> bool:
     return True
 
 
-def get_dir_path(src: str, idx: int, dst: str) -> str:
+def compress_logging_value(item: T) -> Union[T, str]:
+    if isinstance(item, (bool, int, float, str)):
+        return item
+    if isinstance(item, cst.FunctionDef):
+        return f"FunctionDef: {item.name.value}"
+    if isinstance(item, cst.Module):
+        return f"Module type: {len(item.body)}"
+    if isinstance(item, Sequence):
+        if len(item) > 10:
+            return f"len({len(item)})"
+        return item
+    return item
+
+
+def get_dir_path(src: str, idx: int, dst: str = "") -> str:
     curr_dir = Path(src).parents[idx]
     return str(curr_dir.joinpath(dst)).replace("\\", "/")
+
+
+def is_logging_enabled() -> bool:
+    if os.path.exists(get_dir_path(__file__, 2, "envs/.env")):
+        load_dotenv(get_dir_path(__file__, 2, "envs/.env"))
+        return os.getenv("ENABLE_LOGGING", "false").lower() == "true"
+    return False

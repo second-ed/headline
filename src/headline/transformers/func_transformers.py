@@ -1,3 +1,6 @@
+import logging
+from collections import defaultdict
+
 import attr
 import libcst as cst
 from attr.validators import instance_of
@@ -5,16 +8,35 @@ from attr.validators import instance_of
 from headline.utils import (
     get_func_name_edit,
     get_leading_lines,
+    get_name_change,
+    get_normed_test_key,
 )
+
+logger = logging.getLogger()
 
 
 @attr.define
 class FuncTransformer(cst.CSTTransformer):
     func_defs: dict = attr.ib(validator=[instance_of(dict)])
     sorted_func_names: list = attr.ib(validator=[instance_of(list)])
-    all_funcs: list = attr.ib(validator=[instance_of(list)])
-    private_funcs: list = attr.ib(validator=[instance_of(list)])
-    def_index: int = attr.ib(default=0, validator=[instance_of(int)])
+    classes_methods: defaultdict = attr.ib(
+        validator=[instance_of(defaultdict)]
+    )
+    private_funcs: list = attr.ib(validator=[instance_of(list)], init=False)
+    name_changes: dict = attr.ib(validator=[instance_of(dict)], init=False)
+    curr_class: str = attr.ib(default="", validator=[instance_of(str)])  # type: ignore
+    rename_funcs: bool = attr.ib(default=True, validator=[instance_of(bool)])  # type: ignore
+    apply_name_changes: bool = attr.ib(default=False, validator=[instance_of(bool)])  # type: ignore
+    is_test_file: bool = attr.ib(default=False, validator=[instance_of(bool)])  # type: ignore
+    def_index: int = attr.ib(default=0, validator=[instance_of(int)])  # type: ignore
+
+    def __attrs_post_init__(self):
+        self.private_funcs = [
+            f.name
+            for f in self.func_defs.values()
+            if ((f.indent > 0) or (len(f.called) > 0)) and not f.class_name
+        ]
+        self.name_changes = {}
 
     def leave_Module(
         self, original_node: cst.Module, updated_node: cst.Module
@@ -31,13 +53,20 @@ class FuncTransformer(cst.CSTTransformer):
         """
         new_body = []
         for element in updated_node.body:
-            if isinstance(element, cst.FunctionDef):
+            # checking against len to account for more functions that aren't in the
+            # sorted list (e.g. when comparing src names to tests)
+            if (
+                isinstance(element, cst.FunctionDef)
+                and len(self.sorted_func_names) > self.def_index
+            ):
                 # get the sorted function by index and remove leading_lines to avoid
                 # functions having more than 2 lines between them
-
-                new_func = self.func_defs[
-                    self.sorted_func_names[self.def_index]
-                ].with_changes(leading_lines=get_leading_lines(self.def_index))
+                func_name = self.sorted_func_names[self.def_index]
+                new_func = self.func_defs[func_name].def_code.with_changes(
+                    leading_lines=get_leading_lines(
+                        self.func_defs[func_name].def_code, self.def_index
+                    )
+                )
                 new_body.append(new_func)
                 new_body.extend([cst.EmptyLine(), cst.EmptyLine()])
                 self.def_index += 1
@@ -50,27 +79,100 @@ class FuncTransformer(cst.CSTTransformer):
     def leave_FunctionDef(
         self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef
     ) -> cst.FunctionDef:
-        func_name = updated_node.name.value
-        name_edit = get_func_name_edit(
-            func_name, self.all_funcs, self.private_funcs
+        func_name = get_normed_test_key(
+            updated_node.name.value, self.is_test_file
         )
-        if name_edit:
-            updated_node = updated_node.with_changes(
-                name=cst.Name(value=name_edit)
+
+        if self.rename_funcs:
+            name_edit = get_func_name_edit(
+                func_name, list(self.func_defs.keys()), self.private_funcs
             )
-        self.func_defs[func_name] = updated_node
+
+            if name_edit:
+                updated_node = updated_node.with_changes(
+                    name=cst.Name(value=name_edit)
+                )
+                self.name_changes[func_name] = name_edit
+
+        # outside of the indentation to catch call and arg changes
+        self.func_defs[func_name].def_code = updated_node
         return updated_node
 
     def leave_Call(
         self, original_node: cst.Call, updated_node: cst.Call
     ) -> cst.CSTNode:
         if isinstance(updated_node.func, cst.Name):
-            name_edit = get_func_name_edit(
-                updated_node.func.value, self.all_funcs, self.private_funcs
+            func_name = get_normed_test_key(
+                updated_node.func.value, self.is_test_file
             )
-            if name_edit:
+
+            if self.rename_funcs:
+                name_edit = get_func_name_edit(
+                    func_name,
+                    list(self.func_defs.keys()),
+                    self.private_funcs,
+                )
+                if name_edit:
+                    updated_node = updated_node.with_changes(
+                        func=cst.Name(value=name_edit)
+                    )
+
+            if self.apply_name_changes:
+                name_change = get_name_change(func_name, self.name_changes)
                 updated_node = updated_node.with_changes(
-                    func=cst.Name(value=name_edit)
+                    func=cst.Name(value=name_change)
+                )
+        return updated_node
+
+    def leave_Attribute(
+        self, original_node: cst.Attribute, updated_node: cst.Attribute
+    ) -> cst.CSTNode:
+        if isinstance(updated_node.attr, cst.Name):
+            func_name = get_normed_test_key(
+                updated_node.attr.value, self.is_test_file
+            )
+
+            if self.rename_funcs:
+                name_edit = get_func_name_edit(
+                    func_name,
+                    list(self.func_defs.keys()),
+                    self.private_funcs,
+                )
+                if name_edit:
+                    updated_node = updated_node.with_changes(
+                        attr=cst.Name(value=name_edit)
+                    )
+
+            if self.apply_name_changes:
+                name_change = get_name_change(func_name, self.name_changes)
+                updated_node = updated_node.with_changes(
+                    attr=cst.Name(value=name_change)
+                )
+        return updated_node
+
+    def leave_ImportAlias(
+        self, original_node: cst.ImportAlias, updated_node: cst.ImportAlias
+    ) -> cst.CSTNode:
+        if isinstance(updated_node.name, cst.Name):
+            func_name = get_normed_test_key(
+                updated_node.name.value, self.is_test_file
+            )
+
+            if self.rename_funcs:
+                name_edit = get_func_name_edit(
+                    func_name,
+                    list(self.func_defs.keys()),
+                    self.private_funcs,
+                )
+                if name_edit:
+                    updated_node = updated_node.with_changes(
+                        name=cst.Name(value=name_edit)
+                    )
+
+            if self.apply_name_changes:
+                name_change = get_name_change(func_name, self.name_changes)
+                updated_node = updated_node.with_changes(
+                    name=cst.Name(value=name_change)
                 )
         return updated_node
 
@@ -78,13 +180,28 @@ class FuncTransformer(cst.CSTTransformer):
         self, original_node: cst.Arg, updated_node: cst.Arg
     ) -> cst.Arg:
         if isinstance(updated_node.value, cst.Name):
-            func_name = updated_node.value.value
-            name_edit = get_func_name_edit(
-                func_name, self.all_funcs, self.private_funcs
+            func_name = get_normed_test_key(
+                updated_node.value.value, self.is_test_file
             )
-            if name_edit:
-                updated_node = updated_node.with_changes(
-                    value=cst.Name(value=name_edit)
+
+            if self.rename_funcs:
+                name_edit = get_func_name_edit(
+                    func_name, list(self.func_defs.keys()), self.private_funcs
                 )
-            self.func_defs[func_name] = updated_node
+                if name_edit:
+                    updated_node = updated_node.with_changes(
+                        value=cst.Name(value=name_edit)
+                    )
+
+            if self.apply_name_changes:
+                name_change = get_name_change(func_name, self.name_changes)
+                updated_node = updated_node.with_changes(
+                    value=cst.Name(value=name_change)
+                )
         return updated_node
+
+    def visit_ClassDef(self, node: cst.ClassDef) -> None:
+        self.curr_class = node.name.value
+
+    def leave_ClassDef(self, node: cst.ClassDef) -> None:
+        self.curr_class = ""
