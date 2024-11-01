@@ -21,9 +21,11 @@ def sort_src_funcs_and_tests(
     inp_tests_only: bool,
     inp_rename: bool,
     suffix: str = "",
-):
+) -> bool:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
+
+    save_src_res = save_test_res = True
 
     src_code = io.get_src_code(src_path)
     src_tree: cst.Module = cst.parse_module(src_code)
@@ -45,12 +47,12 @@ def sort_src_funcs_and_tests(
         test_tree = cst.parse_module(test_code)
         test_tree = sort_test_funcs(test_tree, src_tree, name_changes)
         test_save_path = test_path.replace(".py", f"{suffix}.py")
-        io.save_modified_code(test_tree.code, test_save_path)
+        save_test_res = io.save_modified_code(test_tree.code, test_save_path)
 
     src_save_path = src_path.replace(".py", f"{suffix}.py")
-    io.save_modified_code(src_tree.code, src_save_path)
+    save_src_res = io.save_modified_code(src_tree.code, src_save_path)
 
-    return True
+    return all([save_src_res, save_test_res])
 
 
 def sort_src_funcs(
