@@ -3,7 +3,7 @@ import logging
 import os
 from typing import List, Tuple
 
-from headline.utils import strip_test_prefix_suffix
+from headline.utils import format_code_str, strip_test_prefix_suffix
 
 from ._logger import compress_logging_value
 
@@ -19,9 +19,13 @@ def get_src_code(path: str) -> str:
     return src_code
 
 
-def save_modified_code(modified_code: str, filepath: str) -> bool:
+def save_modified_code(
+    modified_code: str, filepath: str, format_code: bool = True
+) -> bool:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
+    if format_code:
+        modified_code = format_code_str(modified_code)
     with open(filepath, "w") as f:
         f.write(modified_code)
     return True

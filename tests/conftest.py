@@ -5,424 +5,553 @@ import libcst as cst
 import pytest
 from headline import io
 from headline._logger import get_dir_path
+from headline.utils import format_code_str
 
 
 @pytest.fixture
 def get_fixture_mock_service():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/mock_service.py")
+    return format_code_str(
+        io.get_src_code(get_dir_path(__file__, 1, "mock_data/mock_service.py"))
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_a_alphabetical():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/test_utils_a_alphabetical.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/test_utils_a_alphabetical.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_a_alphabetical_rename():
-    return io.get_src_code(
-        get_dir_path(
-            __file__, 1, "mock_data/test_utils_a_alphabetical_rename.py"
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__, 1, "mock_data/test_utils_a_alphabetical_rename.py"
+            )
         )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_a_alphabetical_underscores():
-    return io.get_src_code(
-        get_dir_path(
-            __file__, 1, "mock_data/test_utils_a_alphabetical_underscores.py"
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__,
+                1,
+                "mock_data/test_utils_a_alphabetical_underscores.py",
+            )
         )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_a_alphabetical_underscores_rename():
-    return io.get_src_code(
-        get_dir_path(
-            __file__,
-            1,
-            "mock_data/test_utils_a_alphabetical_underscores_rename.py",
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__,
+                1,
+                "mock_data/test_utils_a_alphabetical_underscores_rename.py",
+            )
         )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_a_called():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/test_utils_a_called.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/test_utils_a_called.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_a_called_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/test_utils_a_called_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__, 1, "mock_data/test_utils_a_called_rename.py"
+            )
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_a_calls():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/test_utils_a_calls.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/test_utils_a_calls.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_a_calls_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/test_utils_a_calls_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/test_utils_a_calls_rename.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_a_newspaper():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/test_utils_a_newspaper.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/test_utils_a_newspaper.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_a_newspaper_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/test_utils_a_newspaper_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__, 1, "mock_data/test_utils_a_newspaper_rename.py"
+            )
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_b_alphabetical():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/test_utils_b_alphabetical.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/test_utils_b_alphabetical.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_b_alphabetical_rename():
-    return io.get_src_code(
-        get_dir_path(
-            __file__, 1, "mock_data/test_utils_b_alphabetical_rename.py"
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__, 1, "mock_data/test_utils_b_alphabetical_rename.py"
+            )
         )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_b_alphabetical_underscores():
-    return io.get_src_code(
-        get_dir_path(
-            __file__, 1, "mock_data/test_utils_b_alphabetical_underscores.py"
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__,
+                1,
+                "mock_data/test_utils_b_alphabetical_underscores.py",
+            )
         )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_b_alphabetical_underscores_rename():
-    return io.get_src_code(
-        get_dir_path(
-            __file__,
-            1,
-            "mock_data/test_utils_b_alphabetical_underscores_rename.py",
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__,
+                1,
+                "mock_data/test_utils_b_alphabetical_underscores_rename.py",
+            )
         )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_b_called():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/test_utils_b_called.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/test_utils_b_called.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_b_called_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/test_utils_b_called_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__, 1, "mock_data/test_utils_b_called_rename.py"
+            )
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_b_calls():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/test_utils_b_calls.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/test_utils_b_calls.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_b_calls_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/test_utils_b_calls_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/test_utils_b_calls_rename.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_b_manual():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/test_utils_b_manual.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/test_utils_b_manual.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_b_manual_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/test_utils_b_manual_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__, 1, "mock_data/test_utils_b_manual_rename.py"
+            )
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_b_newspaper():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/test_utils_b_newspaper.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/test_utils_b_newspaper.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_test_utils_b_newspaper_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/test_utils_b_newspaper_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__, 1, "mock_data/test_utils_b_newspaper_rename.py"
+            )
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_a_alphabetical():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_a_alphabetical.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_a_alphabetical.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_a_alphabetical_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_a_alphabetical_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__, 1, "mock_data/utils_a_alphabetical_rename.py"
+            )
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_a_alphabetical_underscores():
-    return io.get_src_code(
-        get_dir_path(
-            __file__, 1, "mock_data/utils_a_alphabetical_underscores.py"
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__, 1, "mock_data/utils_a_alphabetical_underscores.py"
+            )
         )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_a_alphabetical_underscores_rename():
-    return io.get_src_code(
-        get_dir_path(
-            __file__,
-            1,
-            "mock_data/utils_a_alphabetical_underscores_rename.py",
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__,
+                1,
+                "mock_data/utils_a_alphabetical_underscores_rename.py",
+            )
         )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_a_called():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_a_called.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_a_called.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_a_called_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_a_called_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_a_called_rename.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_a_calls():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_a_calls.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_a_calls.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_a_calls_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_a_calls_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_a_calls_rename.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_a_newspaper():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_a_newspaper.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_a_newspaper.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_a_newspaper_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_a_newspaper_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_a_newspaper_rename.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_b_alphabetical():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_b_alphabetical.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_b_alphabetical.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_b_alphabetical_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_b_alphabetical_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__, 1, "mock_data/utils_b_alphabetical_rename.py"
+            )
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_b_alphabetical_underscores():
-    return io.get_src_code(
-        get_dir_path(
-            __file__, 1, "mock_data/utils_b_alphabetical_underscores.py"
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__, 1, "mock_data/utils_b_alphabetical_underscores.py"
+            )
         )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_b_alphabetical_underscores_rename():
-    return io.get_src_code(
-        get_dir_path(
-            __file__,
-            1,
-            "mock_data/utils_b_alphabetical_underscores_rename.py",
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__,
+                1,
+                "mock_data/utils_b_alphabetical_underscores_rename.py",
+            )
         )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_b_called():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_b_called.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_b_called.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_b_called_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_b_called_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_b_called_rename.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_b_calls():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_b_calls.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_b_calls.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_b_calls_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_b_calls_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_b_calls_rename.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_b_manual():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_b_manual.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_b_manual.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_b_manual_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_b_manual_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_b_manual_rename.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_b_newspaper():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_b_newspaper.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_b_newspaper.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_b_newspaper_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_b_newspaper_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_b_newspaper_rename.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_c_alphabetical():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_c_alphabetical.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_c_alphabetical.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_c_alphabetical_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_c_alphabetical_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__, 1, "mock_data/utils_c_alphabetical_rename.py"
+            )
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_c_alphabetical_underscores():
-    return io.get_src_code(
-        get_dir_path(
-            __file__, 1, "mock_data/utils_c_alphabetical_underscores.py"
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__, 1, "mock_data/utils_c_alphabetical_underscores.py"
+            )
         )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_c_alphabetical_underscores_rename():
-    return io.get_src_code(
-        get_dir_path(
-            __file__,
-            1,
-            "mock_data/utils_c_alphabetical_underscores_rename.py",
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(
+                __file__,
+                1,
+                "mock_data/utils_c_alphabetical_underscores_rename.py",
+            )
         )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_c_called():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_c_called.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_c_called.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_c_called_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_c_called_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_c_called_rename.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_c_calls():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_c_calls.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_c_calls.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_c_calls_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_c_calls_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_c_calls_rename.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_c_newspaper():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_c_newspaper.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_c_newspaper.py")
+        )
     )
 
 
 @pytest.fixture
 def get_fixture_utils_c_newspaper_rename():
-    return io.get_src_code(
-        get_dir_path(__file__, 1, "mock_data/utils_c_newspaper_rename.py")
+    return format_code_str(
+        io.get_src_code(
+            get_dir_path(__file__, 1, "mock_data/utils_c_newspaper_rename.py")
+        )
     )
 
 
@@ -557,6 +686,7 @@ def get_mock_service_visitor_expected_attrs():
             "process_data",
             "validate_data",
             "save_data",
+            "run",
         ],
         "top_level_funcs": ["some_random_util_func"],
         "classes_methods": defaultdict(

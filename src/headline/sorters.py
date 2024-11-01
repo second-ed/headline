@@ -35,7 +35,9 @@ def sort_funcs_called(funcs: List[FuncDef], indent: int = 0) -> List[str]:
     return [f.name for f in sorted_funcs if f.indent == indent]
 
 
-def sort_funcs_alphabetical(funcs: List[FuncDef], indent: int = 0) -> List[str]:
+def sort_funcs_alphabetical(
+    funcs: List[FuncDef], indent: int = 0
+) -> List[str]:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
     sorted_funcs = sorted(funcs, key=lambda f: f.name.strip("_"))
@@ -43,8 +45,7 @@ def sort_funcs_alphabetical(funcs: List[FuncDef], indent: int = 0) -> List[str]:
 
 
 def sort_funcs_alphabetical_inc_leading_underscores(
-    funcs: List[FuncDef],
-    indent: int = 0
+    funcs: List[FuncDef], indent: int = 0
 ) -> List[str]:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")

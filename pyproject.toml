@@ -9,6 +9,8 @@ requires-python = ">=3.8"
 version = "0.0.1"
 dependencies = [
     "attrs",
+    "black>=24",
+    "isort",
     "libcst",
     "python-dotenv >= 0.20.0",
 ]
@@ -21,7 +23,6 @@ test = [
 ]
 lint = [
     "pre-commit",
-    "black>=24",
     "ruff>=0.4.2",
 ]
 dev = [
