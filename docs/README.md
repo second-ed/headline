@@ -44,4 +44,25 @@ If a function is:
 Otherwise it has no leading underscore.
 
 
+# To use
+```bash
+python3 -m headline <cwd> [src_dir] [tests_dir] [sort_type] [tests_only] [rename] [suffix]
+```
 
+## args
+- `cwd`: the directory to run the process on
+
+- `src_dir`: the directory with the source files, `headline` will match files in this directory to those with the `test_` prefix in the specified tests directory
+
+- `test_dir`: the directory where the test files are for the source files
+
+- `sort_type`: 
+    - `newspaper`: sort functions based on a custom "newspaper" logic.                                                 
+    - `called`: sort functions by the number of times they are referenced or "called" by other functions               
+    - `calls` : sort functions based on the number of references or "calls" they make to other functions               
+    - `alphabetical`: sort functions alphabetically, ignoring leading underscores                      
+    - `alphabetical_include_leading_underscores`: sort functions alphabetically, including leading underscores in the sort order
+
+- `rename`: add leading underscores to functions that are used internally within the module
+
+- `suffix`: if you want to try `headline` on your code but not apply the changes inplace, this will create files with the suffix you specify, so `my_file.py` with suffix `_example` will have headline applied to it and save to `my_file_example.py`
