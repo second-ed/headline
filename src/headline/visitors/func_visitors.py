@@ -98,7 +98,7 @@ class FuncVisitor(cst.CSTVisitor):
     def _get_full_module_name(self, module) -> Optional[str]:
         if isinstance(module, cst.Attribute):
             return (
-                self._get_full_module_name(module.value)
+                self._get_full_module_name(module.value)  # type: ignore
                 + "."
                 + module.attr.value
             )
