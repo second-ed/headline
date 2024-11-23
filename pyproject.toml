@@ -30,7 +30,7 @@ dev = [
 ]
 
 [tool.black]
-line-length = 79
+line-length = 88
 force-exclude = "mock_data"
 
 [tool.ruff]
@@ -38,7 +38,7 @@ force-exclude = true
 exclude = ["mock_data"]
 lint.extend-select = ["I", "W"]
 lint.ignore = ["E741"]
-line-length = 79
+line-length = 88
 
 
 [tool.pytest.ini_options]
