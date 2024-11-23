@@ -11,19 +11,13 @@ from ._logger import compress_logging_value
 logger = logging.getLogger()
 
 
-def get_func_name_edit(
-    func_name: str, all_funcs: list, private_funcs: list
-) -> str:
+def get_func_name_edit(func_name: str, all_funcs: list, private_funcs: list) -> str:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
 
-    if is_not_private_and_has_leading_underscore(
-        func_name, all_funcs, private_funcs
-    ):
+    if is_not_private_and_has_leading_underscore(func_name, all_funcs, private_funcs):
         return func_name.lstrip("_")
-    if is_private_and_has_no_leading_underscore(
-        func_name, all_funcs, private_funcs
-    ):
+    if is_private_and_has_no_leading_underscore(func_name, all_funcs, private_funcs):
         return f"_{func_name}"
     return ""
 

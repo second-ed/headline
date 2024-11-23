@@ -98,9 +98,7 @@ def sort_test_funcs(
 
     fv = _get_visitor(src_tree)
     func_defs = [f.strip("_") for f in fv.top_level_funcs]
-    sorted_test_order = [
-        f for f in func_defs if f in normed_test_func_defs.keys()
-    ]
+    sorted_test_order = [f for f in func_defs if f in normed_test_func_defs.keys()]
 
     transformer = FuncTransformer(
         normed_test_func_defs,

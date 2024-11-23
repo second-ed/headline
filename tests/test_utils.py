@@ -2,6 +2,7 @@ from contextlib import nullcontext as does_not_raise
 
 import libcst as cst
 import pytest
+
 from headline.utils import (
     get_func_name_edit,
     get_leading_lines,
@@ -27,8 +28,7 @@ def test_get_func_name_edit(
 ) -> None:
     with expected_context:
         assert (
-            get_func_name_edit(func_name, all_funcs, private_funcs)
-            == expected_result
+            get_func_name_edit(func_name, all_funcs, private_funcs) == expected_result
         )
 
 
@@ -185,8 +185,6 @@ def test_is_private_and_has_no_leading_underscore(
         ("case_test", "case", does_not_raise()),
     ],
 )
-def test_strip_test_prefix_suffix(
-    input_str, expected_result, expected_context
-):
+def test_strip_test_prefix_suffix(input_str, expected_result, expected_context):
     with expected_context:
         assert strip_test_prefix_suffix(input_str) == expected_result

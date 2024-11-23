@@ -19,9 +19,7 @@ logger = logging.getLogger()
 class FuncTransformer(cst.CSTTransformer):
     func_defs: dict = attr.ib(validator=[instance_of(dict)])
     sorted_func_names: list = attr.ib(validator=[instance_of(list)])
-    classes_methods: defaultdict = attr.ib(
-        validator=[instance_of(defaultdict)]
-    )
+    classes_methods: defaultdict = attr.ib(validator=[instance_of(defaultdict)])
     private_funcs: list = attr.ib(validator=[instance_of(list)], init=False)
     name_changes: dict = attr.ib(validator=[instance_of(dict)], init=False)
     curr_class: str = attr.ib(default="", validator=[instance_of(str)])  # type: ignore
@@ -79,9 +77,7 @@ class FuncTransformer(cst.CSTTransformer):
     def leave_FunctionDef(
         self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef
     ) -> cst.FunctionDef:
-        func_name = get_normed_test_key(
-            updated_node.name.value, self.is_test_file
-        )
+        func_name = get_normed_test_key(updated_node.name.value, self.is_test_file)
 
         if self.rename_funcs:
             name_edit = get_func_name_edit(
@@ -89,9 +85,7 @@ class FuncTransformer(cst.CSTTransformer):
             )
 
             if name_edit:
-                updated_node = updated_node.with_changes(
-                    name=cst.Name(value=name_edit)
-                )
+                updated_node = updated_node.with_changes(name=cst.Name(value=name_edit))
                 self.name_changes[func_name] = name_edit
 
         # outside of the indentation to catch call and arg changes
@@ -102,9 +96,7 @@ class FuncTransformer(cst.CSTTransformer):
         self, original_node: cst.Call, updated_node: cst.Call
     ) -> cst.CSTNode:
         if isinstance(updated_node.func, cst.Name):
-            func_name = get_normed_test_key(
-                updated_node.func.value, self.is_test_file
-            )
+            func_name = get_normed_test_key(updated_node.func.value, self.is_test_file)
 
             if self.rename_funcs:
                 name_edit = get_func_name_edit(
@@ -128,9 +120,7 @@ class FuncTransformer(cst.CSTTransformer):
         self, original_node: cst.Attribute, updated_node: cst.Attribute
     ) -> cst.CSTNode:
         if isinstance(updated_node.attr, cst.Name):
-            func_name = get_normed_test_key(
-                updated_node.attr.value, self.is_test_file
-            )
+            func_name = get_normed_test_key(updated_node.attr.value, self.is_test_file)
 
             if self.rename_funcs:
                 name_edit = get_func_name_edit(
@@ -154,9 +144,7 @@ class FuncTransformer(cst.CSTTransformer):
         self, original_node: cst.ImportAlias, updated_node: cst.ImportAlias
     ) -> cst.CSTNode:
         if isinstance(updated_node.name, cst.Name):
-            func_name = get_normed_test_key(
-                updated_node.name.value, self.is_test_file
-            )
+            func_name = get_normed_test_key(updated_node.name.value, self.is_test_file)
 
             if self.rename_funcs:
                 name_edit = get_func_name_edit(
@@ -176,13 +164,9 @@ class FuncTransformer(cst.CSTTransformer):
                 )
         return updated_node
 
-    def leave_Arg(
-        self, original_node: cst.Arg, updated_node: cst.Arg
-    ) -> cst.Arg:
+    def leave_Arg(self, original_node: cst.Arg, updated_node: cst.Arg) -> cst.Arg:
         if isinstance(updated_node.value, cst.Name):
-            func_name = get_normed_test_key(
-                updated_node.value.value, self.is_test_file
-            )
+            func_name = get_normed_test_key(updated_node.value.value, self.is_test_file)
 
             if self.rename_funcs:
                 name_edit = get_func_name_edit(

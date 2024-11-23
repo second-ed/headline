@@ -1,10 +1,11 @@
 import os
 from contextlib import nullcontext as does_not_raise
 
-import headline.sorters as srt
-import headline.transform as tf
 import libcst as cst
 import pytest
+
+import headline.sorters as srt
+import headline.transform as tf
 from headline import io
 from headline._logger import get_dir_path
 from headline.utils import format_code_str
@@ -57,9 +58,7 @@ def test_sort_src_funcs_and_tests(
     expected_context,
 ):
     with expected_context:
-        expected_src_result = request.getfixturevalue(
-            expected_src_result_fixture_name
-        )
+        expected_src_result = request.getfixturevalue(expected_src_result_fixture_name)
         expected_test_result = request.getfixturevalue(
             expected_test_result_fixture_name
         )
@@ -227,9 +226,7 @@ def test_sort_test_funcs(
     expected_context,
 ):
     with expected_context:
-        src_tree = cst.parse_module(
-            request.getfixturevalue(src_code_fixture_name)
-        )
+        src_tree = cst.parse_module(request.getfixturevalue(src_code_fixture_name))
         test_tree = cst.parse_module(io.get_src_code(test_path))
         expected_result = request.getfixturevalue(expected_result_fixture_name)
         assert (

@@ -1,8 +1,9 @@
 from contextlib import nullcontext as does_not_raise
 
-import headline.transform as tf
 import libcst as cst
 import pytest
+
+import headline.transform as tf
 from headline.visitors.func_visitors import FuncVisitor
 
 

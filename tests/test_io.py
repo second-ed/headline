@@ -1,6 +1,7 @@
 from contextlib import nullcontext as does_not_raise
 
 import pytest
+
 from headline import io
 from headline._logger import get_dir_path
 
@@ -50,9 +51,7 @@ def test_find_files_in_folders(
 ) -> None:
     with expected_context:
         assert (
-            io.find_files_in_folders(
-                get_mock_package_all_files, search_folders
-            )
+            io.find_files_in_folders(get_mock_package_all_files, search_folders)
             == expected_result
         )
 
@@ -107,15 +106,11 @@ def test_find_matching_files(
             [
                 (
                     get_dir_path(__file__, 0, "mock_package/src/utils_a.py"),
-                    get_dir_path(
-                        __file__, 0, "mock_package/tests/test_utils_a.py"
-                    ),
+                    get_dir_path(__file__, 0, "mock_package/tests/test_utils_a.py"),
                 ),
                 (
                     get_dir_path(__file__, 0, "mock_package/src/utils_b.py"),
-                    get_dir_path(
-                        __file__, 0, "mock_package/tests/test_utils_b.py"
-                    ),
+                    get_dir_path(__file__, 0, "mock_package/tests/test_utils_b.py"),
                 ),
                 (
                     get_dir_path(__file__, 0, "mock_package/src/utils_c.py"),

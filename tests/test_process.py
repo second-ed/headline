@@ -1,9 +1,10 @@
 import os
 import shutil
 
+import pytest
+
 import headline.io as io
 import headline.process as proc
-import pytest
 from headline._logger import get_dir_path
 from headline.utils import format_code_str
 
@@ -20,9 +21,7 @@ def create_mock_package():
     }
 
     mock_root = get_dir_path(__file__, 1)
-    mock_src_path = os.path.join(
-        mock_root, "inplace_mock_package/src/mock_package"
-    )
+    mock_src_path = os.path.join(mock_root, "inplace_mock_package/src/mock_package")
     mock_tests_path = os.path.join(mock_root, "inplace_mock_package/tests")
 
     for path in [mock_src_path, mock_tests_path]:

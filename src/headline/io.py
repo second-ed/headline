@@ -31,9 +31,7 @@ def save_modified_code(
     return True
 
 
-def find_files_in_folders(
-    all_files: List[str], search_folders: List[str]
-) -> List[str]:
+def find_files_in_folders(all_files: List[str], search_folders: List[str]) -> List[str]:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
     return [

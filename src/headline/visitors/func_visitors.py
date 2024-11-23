@@ -11,9 +11,7 @@ from headline.utils import remove_duplicate_calls
 @attr.define
 class FuncDef:
     name: str = attr.ib(validator=[instance_of(str)])
-    def_code: cst.FunctionDef = attr.ib(
-        validator=[instance_of(cst.FunctionDef)]
-    )
+    def_code: cst.FunctionDef = attr.ib(validator=[instance_of(cst.FunctionDef)])
     calls: list = attr.ib(validator=[instance_of(list)])
     called: list = attr.ib(validator=[instance_of(list)])
     indent: int = attr.ib(validator=[instance_of(int)])
