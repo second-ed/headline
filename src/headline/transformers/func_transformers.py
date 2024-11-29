@@ -7,7 +7,6 @@ from attr.validators import instance_of
 
 from headline.utils import (
     get_func_name_edit,
-    get_leading_lines,
     get_name_change,
     get_normed_test_key,
 )
@@ -57,14 +56,9 @@ class FuncTransformer(cst.CSTTransformer):
                 isinstance(element, cst.FunctionDef)
                 and len(self.sorted_func_names) > self.def_index
             ):
-                # get the sorted function by index and remove leading_lines to avoid
-                # functions having more than 2 lines between them
+                # get the sorted function by index
                 func_name = self.sorted_func_names[self.def_index]
-                new_func = self.func_defs[func_name].def_code.with_changes(
-                    leading_lines=get_leading_lines(
-                        self.func_defs[func_name].def_code, self.def_index
-                    )
-                )
+                new_func = self.func_defs[func_name].def_code.with_changes()
                 new_body.append(new_func)
                 new_body.extend([cst.EmptyLine(), cst.EmptyLine()])
                 self.def_index += 1

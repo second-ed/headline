@@ -22,15 +22,6 @@ def get_func_name_edit(func_name: str, all_funcs: list, private_funcs: list) -> 
     return ""
 
 
-def get_leading_lines(def_code: cst.FunctionDef, idx: int) -> list:
-    for key, val in locals().items():
-        logger.debug(f"{key} = {compress_logging_value(val)}")
-
-    if idx == 0:
-        return [cst.EmptyLine()] + get_leading_comments(def_code)
-    return [] + get_leading_comments(def_code)
-
-
 def get_normed_test_key(item: str, is_test: bool) -> str:
     if is_test:
         return strip_test_prefix_suffix(item)
