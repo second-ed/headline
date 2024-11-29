@@ -11,7 +11,9 @@ from ._logger import compress_logging_value
 logger = logging.getLogger()
 
 
-def get_func_name_edit(func_name: str, all_funcs: list, private_funcs: list) -> str:
+def get_func_name_edit(
+    func_name: str, all_funcs: list[str], private_funcs: list[str]
+) -> str:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
 
@@ -42,7 +44,7 @@ def get_name_change(item: str, changes: Dict[str, str]) -> str:
     return item
 
 
-def remove_duplicate_calls(calls: list) -> list:
+def remove_duplicate_calls(calls: list[str]) -> list:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
 
@@ -54,7 +56,7 @@ def get_leading_comments(def_code: cst.FunctionDef) -> list:
 
 
 def is_not_private_and_has_leading_underscore(
-    func_name: str, all_funcs: list, private_funcs: list
+    func_name: str, all_funcs: list[str], private_funcs: list[str]
 ) -> bool:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
@@ -67,7 +69,7 @@ def is_not_private_and_has_leading_underscore(
 
 
 def is_private_and_has_no_leading_underscore(
-    func_name: str, all_funcs: list, private_funcs: list
+    func_name: str, all_funcs: list[str], private_funcs: list[str]
 ) -> bool:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
