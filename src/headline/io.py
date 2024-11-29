@@ -24,11 +24,14 @@ def save_modified_code(
 ) -> bool:
     for key, val in locals().items():
         logger.debug(f"{key} = {compress_logging_value(val)}")
-    if format_code:
-        modified_code = format_code_str(modified_code)
-    with open(filepath, "w") as f:
-        f.write(modified_code)
-    return True
+    try:
+        if format_code:
+            modified_code = format_code_str(modified_code)
+        with open(filepath, "w") as f:
+            f.write(modified_code)
+        return True
+    except Exception as e:
+        print(f"{e} for {filepath}")
 
 
 def find_files_in_folders(all_files: List[str], search_folders: List[str]) -> List[str]:
