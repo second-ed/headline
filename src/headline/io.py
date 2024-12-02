@@ -32,6 +32,7 @@ def save_modified_code(
         return True
     except Exception as e:
         print(f"{e} for {filepath}")
+        return False
 
 
 def find_files_in_folders(all_files: List[str], search_folders: List[str]) -> List[str]:
