@@ -22,8 +22,7 @@ def sort_src_funcs_and_tests(
     inp_rename: bool,
     suffix: str = "",
 ) -> bool:
-    for key, val in locals().items():
-        logger.debug(f"{key} = {compress_logging_value(val)}")
+    logger.debug({key: compress_logging_value(val) for key, val in locals().items()})
 
     save_src_res = save_test_res = True
 
@@ -61,8 +60,7 @@ def sort_src_funcs(
     sorted_funcs: Optional[List[str]] = None,
     rename_funcs: bool = False,
 ) -> Tuple[cst.Module, Dict[str, str]]:
-    for key, val in locals().items():
-        logger.debug(f"{key} = {compress_logging_value(val)}")
+    logger.debug({key: compress_logging_value(val) for key, val in locals().items()})
 
     if all([sorting_func is None, sorted_funcs is None]):
         raise ValueError("Must have either sorting_func or sorted_funcs")
@@ -87,8 +85,7 @@ def sort_test_funcs(
     src_tree: cst.Module,
     call_name_changes: Dict[str, str],
 ) -> cst.Module:
-    for key, val in locals().items():
-        logger.debug(f"{key} = {compress_logging_value(val)}")
+    logger.debug({key: compress_logging_value(val) for key, val in locals().items()})
 
     test_func_defs = _get_visitor(test_tree).func_defs
 
@@ -127,8 +124,7 @@ def _get_sort_type(inp_sort_type: str) -> Callable:
 
 
 def _get_visitor(src_module: cst.Module) -> FuncVisitor:
-    for key, val in locals().items():
-        logger.debug(f"{key} = {compress_logging_value(val)}")
+    logger.debug({key: compress_logging_value(val) for key, val in locals().items()})
 
     src_visitor = FuncVisitor()
     src_module.visit(src_visitor)

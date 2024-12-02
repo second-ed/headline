@@ -24,8 +24,7 @@ def main_process(
     rename: bool,
     suffix: str,
 ):
-    for key, val in locals().items():
-        logger.debug(f"{key} = {compress_logging_value(val)}")
+    logger.debug({key: compress_logging_value(val) for key, val in locals().items()})
     paths = get_matching_files(cwd, src_dir, tests_dir)
 
     for src_path, test_path in paths:

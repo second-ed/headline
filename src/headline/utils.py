@@ -14,9 +14,7 @@ logger = logging.getLogger()
 def get_func_name_edit(
     func_name: str, all_funcs: list[str], private_funcs: list[str]
 ) -> str:
-    for key, val in locals().items():
-        logger.debug(f"{key} = {compress_logging_value(val)}")
-
+    logger.debug({key: compress_logging_value(val) for key, val in locals().items()})
     if is_not_private_and_has_leading_underscore(func_name, all_funcs, private_funcs):
         return func_name.lstrip("_")
     if is_private_and_has_no_leading_underscore(func_name, all_funcs, private_funcs):
@@ -45,9 +43,7 @@ def get_name_change(item: str, changes: Dict[str, str]) -> str:
 
 
 def remove_duplicate_calls(calls: list[str]) -> list:
-    for key, val in locals().items():
-        logger.debug(f"{key} = {compress_logging_value(val)}")
-
+    logger.debug({key: compress_logging_value(val) for key, val in locals().items()})
     return list(dict.fromkeys(calls))
 
 
@@ -58,9 +54,7 @@ def get_leading_comments(def_code: cst.FunctionDef) -> list:
 def is_not_private_and_has_leading_underscore(
     func_name: str, all_funcs: list[str], private_funcs: list[str]
 ) -> bool:
-    for key, val in locals().items():
-        logger.debug(f"{key} = {compress_logging_value(val)}")
-
+    logger.debug({key: compress_logging_value(val) for key, val in locals().items()})
     return (
         func_name.startswith("_")
         and func_name in all_funcs
@@ -71,9 +65,7 @@ def is_not_private_and_has_leading_underscore(
 def is_private_and_has_no_leading_underscore(
     func_name: str, all_funcs: list[str], private_funcs: list[str]
 ) -> bool:
-    for key, val in locals().items():
-        logger.debug(f"{key} = {compress_logging_value(val)}")
-
+    logger.debug({key: compress_logging_value(val) for key, val in locals().items()})
     return (
         not func_name.startswith("_")
         and func_name in all_funcs
@@ -82,7 +74,5 @@ def is_private_and_has_no_leading_underscore(
 
 
 def strip_test_prefix_suffix(input_str: str) -> str:
-    for key, val in locals().items():
-        logger.debug(f"{key} = {compress_logging_value(val)}")
-
+    logger.debug({key: compress_logging_value(val) for key, val in locals().items()})
     return re.sub(r"(^test_|_test$)", "", input_str)

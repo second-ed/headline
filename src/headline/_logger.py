@@ -26,7 +26,7 @@ def compress_logging_value(item: T) -> Union[T, str]:
     if isinstance(item, cst.FunctionDef):
         return f"FunctionDef: {item.name.value}"
     if isinstance(item, cst.Module):
-        return f"Module type: {len(item.body)}"
+        return f"Module type len(): {len(item.body)}"
     if isinstance(item, Sequence):
         if len(item) > 10:
             return f"len({len(item)})"
