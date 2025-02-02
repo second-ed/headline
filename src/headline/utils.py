@@ -28,7 +28,11 @@ def get_normed_test_key(item: str, is_test: bool) -> str:
     return item
 
 
-def cst_obj_to_str(node) -> str:
+def str_to_cst(code: str) -> cst.Module:
+    return cst.parse_module(code)
+
+
+def cst_to_str(node) -> str:
     return cst.Module([]).code_for_node(node)
 
 
